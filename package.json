@@ -1,0 +1,22 @@
+{
+  "name": "odinoder",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SaaS Ordering and Membership System Monorepo",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "echo \"Please run start in specific workspace\"",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces"
+  },
+  "devDependencies": {
+    "prisma": "^7.10.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.10.0"
+  }
+}
