@@ -11,10 +11,7 @@ export class OrdersController {
     return this.ordersService.create(createOrderDto);
   }
 
-  @Post('demo')
-  demoCreate(@Body() data: any) {
-    return this.ordersService.demoCreate(data);
-  }
+  // demo endpoint removed
 
   @Get('tenant/:tenantId')
   findAllByTenant(@Param('tenantId') tenantId: string) {

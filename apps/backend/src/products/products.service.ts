@@ -27,15 +27,28 @@ export class ProductsService {
     });
   }
 
-  async update(id: string, data: Partial<Prisma.ProductUpdateInput>) {
+  async update(id: string, data: any) {
+    const updateData: any = {
+      name: data.name,
+      price: data.price,
+      category: data.category as string,
+      imageUrl: data.imageUrl,
+    };
+    
+    if (data.recipes) {
+      updateData.recipeItems = {
+        deleteMany: {},
+        create: data.recipes.map((r: any) => ({
+          rawMaterialId: r.rawMaterialId,
+          amount: r.amount
+        }))
+      };
+    }
+
     return this.prisma.product.update({
       where: { id },
-      data: {
-        name: data.name,
-        price: data.price,
-        category: data.category as string,
-        imageUrl: data.imageUrl
-      }
+      data: updateData,
+      include: { recipeItems: { include: { rawMaterial: true } } }
     });
   }
 }

@@ -1,3 +1,4 @@
+import { Package, AlertCircle, Building2 } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
@@ -7,7 +8,7 @@ export default function App() {
   const [availableStores, setAvailableStores] = useState<any[]>([]);
   const [newStoreName, setNewStoreName] = useState('');
 
-  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'settings' | 'qrcodes'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'settings' | 'qrcodes' | 'inventory'>('orders');
   const [products, setProducts] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [rawMaterials, setRawMaterials] = useState<any[]>([]);
@@ -67,6 +68,18 @@ export default function App() {
 
   // 登出
   
+  const fetchRawMaterials = async () => {
+    if(!tenantId) return;
+    try {
+      const res = await fetch(`http://localhost:3000/raw-materials/tenant/${tenantId}`);
+      setRawMaterials(await res.json());
+    } catch(e) {}
+  };
+
+  useEffect(() => {
+    if (activeTab === 'inventory') fetchRawMaterials();
+  }, [activeTab, tenantId]);
+
   const handleCreateMaterial = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -91,7 +104,7 @@ export default function App() {
     } catch(e){}
   };
 
-  const handleUpdateStoreProfile = async (e) => {
+  const handleUpdateStoreProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await fetch(`http://localhost:3000/tenants/${tenantId}`, {
@@ -100,7 +113,7 @@ export default function App() {
         body: JSON.stringify({ name: tenantName })
       });
       if(res.ok) {
-        localStorage.setItem('admin_tenantName', tenantName);
+        localStorage.setItem('admin_tenantName', tenantName || '');
         alert('門市資料已更新！');
       }
     } catch(e) {}
@@ -119,17 +132,7 @@ export default function App() {
       const res = await fetch(`http://localhost:3000/products/tenant/${tenantId}`);
       setProducts(await res.json());
     };
-    const fetchRawMaterials = async () => {
-    if(!tenantId) return;
-    try {
-      const res = await fetch(`http://localhost:3000/raw-materials/tenant/${tenantId}`);
-      setRawMaterials(await res.json());
-    } catch(e) {}
-  };
-
-  useEffect(() => {
-    if (activeTab === 'inventory') fetchRawMaterials();
-  }, [activeTab, tenantId]);
+    
 
   const fetchOrders = async () => {
       const res = await fetch(`http://localhost:3000/orders/tenant/${tenantId}`);
@@ -245,7 +248,7 @@ export default function App() {
         <div className="flex-1 py-6 px-4 space-y-2">
           <p className="px-4 text-xs font-bold text-gray-400 tracking-wider mb-2">營運管理</p>
           <button 
-            onClick={() => { setActiveTab('orders'); fetchOrders(); }}
+            onClick={() => setActiveTab('orders')}
             className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'orders' ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:bg-gray-50'}`}>
             <span className="text-lg mr-3">📊</span> 營業數據分析
           </button>
@@ -373,7 +376,7 @@ export default function App() {
             </div>
           )}
 
-          {activeTab === 'products' ? (
+          {activeTab === 'products' && (
             <div className="space-y-6 animate-in fade-in duration-300 max-w-5xl mx-auto">
               <div className="flex justify-between items-end">
                 <div>
@@ -473,7 +476,8 @@ export default function App() {
                 </table>
               </div>
             </div>
-          ) : (
+          )}
+          {activeTab === 'orders' && (
             <div className="space-y-6 animate-in fade-in duration-300 max-w-6xl mx-auto">
               {/* 營業數據圖表 */}
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -594,6 +598,7 @@ export default function App() {
             </div>
           )}
 
+
           {activeTab === 'settings' && (
             <div className="space-y-6 animate-in fade-in duration-300 max-w-4xl mx-auto">
               <div className="mb-6">
@@ -602,40 +607,7 @@ export default function App() {
               </div>
 
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 space-y-8">
-                <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">🏢 門市基本資料</h4>
-                  <div className="grid grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-xs font-bold text-gray-500 mb-2">門市名稱</label>
-                      <input type="text" defaultValue={tenantName || ''} className="w-full border border-gray-200 bg-gray-50 px-4 py-2.5 rounded-xl font-medium focus:outline-none" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-gray-500 mb-2">營業狀態</label>
-                      <select className="w-full border border-gray-200 bg-white px-4 py-2.5 rounded-xl font-bold text-green-600 focus:outline-none appearance-none cursor-pointer">
-                        <option>🟢 正常營業中</option>
-                        <option>🔴 休息中</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">🖨️ 硬體設備與出單機連線</h4>
-                  <div className="flex items-center justify-between p-4 border border-gray-100 rounded-xl bg-gray-50">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-white rounded-lg shadow-sm flex items-center justify-center text-2xl border border-gray-100">🧾</div>
-                      <div>
-                        <p className="font-bold text-gray-800">廚房出單機 (ESC/POS)</p>
-                        <p className="text-xs text-green-600 font-bold mt-0.5">🟢 已連線 (192.168.1.100)</p>
-                      </div>
-                    </div>
-                    <button onClick={() => alert('已發送測試列印指令到廚房出單機！')} className="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-gray-100 transition active:scale-95">
-                      測試列印
-                    </button>
-                  </div>
-                </div>
-
-                <form onSubmit={handleUpdateStoreProfile} className="mb-8 border-b border-gray-100 pb-8">
+                <form onSubmit={handleUpdateStoreProfile} className="mb-8">
                   <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center"><Building2 size={20} className="mr-2 text-blue-600" /> 門市基本資料維護</h4>
                   <div className="flex flex-col space-y-4 max-w-md">
                     <div>
@@ -654,41 +626,6 @@ export default function App() {
                     </button>
                   </div>
                 </form>
-
-                <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2 flex items-center"><Printer size={20} className="mr-2 text-blue-600" />列印桌號專屬 QR Code</h4>
-                  <div className="flex flex-col space-y-4">
-                    <p className="text-sm text-gray-500">請輸入桌號產生專屬 QR Code (供消費者掃描點餐)：</p>
-                    <div className="flex items-center space-x-4">
-                      <input 
-                        type="text" 
-                        placeholder="例如: 1, 2, VIP包廂" 
-                        id="tableInput"
-                        className="border border-gray-200 bg-gray-50 px-4 py-2.5 rounded-xl font-medium focus:outline-none w-48" 
-                        onChange={(e) => {
-                          const img = document.getElementById('qrCodeImg') as HTMLImageElement;
-                          const val = e.target.value || '';
-                          const encodedUrl = encodeURIComponent(`http://localhost:3001/${tenantId}?table=${val}`);
-                          img.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodedUrl}`;
-                        }}
-                      />
-                    </div>
-                    <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 inline-flex flex-col items-center justify-center w-48 h-48">
-                      <img 
-                        id="qrCodeImg" 
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`http://localhost:3001/${tenantId}`)}`} 
-                        alt="QR Code" 
-                        className="w-32 h-32"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4 flex justify-end">
-                  <button onClick={() => alert('設定已成功儲存！')} className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200 active:scale-95">
-                    儲存設定變更
-                  </button>
-                </div>
               </div>
             </div>
           )}
@@ -697,3 +634,4 @@ export default function App() {
     </div>
   );
 }
+
