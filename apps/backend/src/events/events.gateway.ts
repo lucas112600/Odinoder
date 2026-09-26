@@ -1,4 +1,4 @@
-﻿import {
+import {
   WebSocketGateway,
   WebSocketServer,
   SubscribeMessage,
@@ -15,18 +15,18 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
 
   handleConnection(client: Socket) {
-    console.log(Client connected: $);
+    console.log(`Client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    console.log(Client disconnected: $);
+    console.log(`Client disconnected: ${client.id}`);
   }
 
   @SubscribeMessage('joinTenant')
   handleJoinTenant(client: Socket, tenantId: string) {
-    const room = 	enant_$;
+    const room = `tenant_${tenantId}`;
     client.join(room);
-    console.log(Client $ joined room: $);
+    console.log(`Client ${client.id} joined room: ${room}`);
     return { event: 'joined', data: room };
   }
 }

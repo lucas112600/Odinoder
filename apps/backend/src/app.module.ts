@@ -1,6 +1,8 @@
 ﻿import { Module } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
-import { TenantsModule } from './tenants/tenants.module';
+import { TenantsModule,
+    RawMaterialsModule } from './tenants/tenants.module';
+import { RawMaterialsModule } from './raw-materials/raw-materials.module';
 import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { OrdersModule } from './orders/orders.module';

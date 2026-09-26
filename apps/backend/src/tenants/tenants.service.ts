@@ -1,20 +1,45 @@
-﻿import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class TenantsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: Prisma.TenantCreateInput) {
-    return this.prisma.tenant.create({ data });
+  async create(data: { name: string }) {
+    return this.prisma.tenant.create({
+      data: {
+        name: data.name,
+        subscriptionPlan: 'FREE'
+      }
+    });
   }
 
   async findAll() {
-    return this.prisma.tenant.findMany();
+    return this.prisma.tenant.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
   }
 
-  async findOne(id: string) {
-    return this.prisma.tenant.findUnique({ where: { id } });
+  async update(id: string, data: { name?: string, isActive?: boolean }) {
+    return this.prisma.tenant.update({
+      where: { id },
+      data
+    });
+  }
+
+  async remove(id: string) {
+    // 為了避免 Foreign Key Constraint，依序刪除關聯資料
+    await this.prisma.orderItem.deleteMany({
+      where: { order: { tenantId: id } }
+    });
+    await this.prisma.order.deleteMany({
+      where: { tenantId: id }
+    });
+    await this.prisma.product.deleteMany({
+      where: { tenantId: id }
+    });
+    return this.prisma.tenant.delete({
+      where: { id }
+    });
   }
 }

@@ -1,4 +1,4 @@
-﻿import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { Prisma } from '@prisma/client';
 
@@ -9,6 +9,11 @@ export class OrdersController {
   @Post()
   create(@Body() createOrderDto: Prisma.OrderCreateInput) {
     return this.ordersService.create(createOrderDto);
+  }
+
+  @Post('demo')
+  demoCreate(@Body() data: any) {
+    return this.ordersService.demoCreate(data);
   }
 
   @Get('tenant/:tenantId')
