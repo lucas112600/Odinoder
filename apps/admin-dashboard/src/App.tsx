@@ -15,6 +15,10 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'settings' | 'qrcodes' | 'inventory' | 'pos' | 'history'>('orders');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [tenderedAmount, setTenderedAmount] = useState<number | ''>('');
+  const [taxId, setTaxId] = useState('');
   const [cart, setCart] = useState<{product: any, quantity: number}[]>([]);
   const [walkInTable, setWalkInTable] = useState('外帶');
   const [products, setProducts] = useState<any[]>([]);
@@ -958,27 +962,97 @@ export default function App() {
                     <Clock size={20} className="mr-3 text-[#37352f]" /> 
                     每日結單與交接班 (Z-Report)
                   </h4>
-                  <div className="bg-[#f7f6f3] border border-[#e9e9e7] rounded-md p-6 max-w-md">
-                    <div className="flex justify-between items-center py-2 border-b border-[#e9e9e7]">
-                      <span className="text-[#9a9a97] font-bold text-sm">當前班表未結帳單數</span>
-                      <span className="font-black text-[#37352f]">{shiftData.orderCount} 筆</span>
+                  <div className="bg-[#f7f6f3] border border-[#e9e9e7] rounded-md p-6 max-w-md font-mono text-sm">
+                    <div className="text-center mb-4 border-b border-dashed border-gray-400 pb-4">
+                      <h5 className="font-black text-lg mb-1">{tenantName || '門市'} 結帳交班單</h5>
+                      <p className="text-gray-500">列印時間: {new Date().toLocaleString()}</p>
                     </div>
-                    <div className="flex justify-between items-center py-4">
-                      <span className="text-[#9a9a97] font-bold text-sm">當前班表營業總額</span>
-                      <span className="font-black text-2xl text-[#37352f]">NT$ {shiftData.total}</span>
+                    <div className="space-y-2 mb-4 border-b border-dashed border-gray-400 pb-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">期初準備金 (Float)</span>
+                        <span className="font-bold">NT$ 0</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">已結帳單數</span>
+                        <span className="font-bold">{shiftData.orderCount} 筆</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">內含營業稅額 (5%)</span>
+                        <span className="font-bold">NT$ {Math.round(shiftData.total * 0.05)}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">淨營業額 (Net)</span>
+                        <span className="font-bold">NT$ {shiftData.total - Math.round(shiftData.total * 0.05)}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center py-2 mb-4 bg-gray-200 px-2 rounded">
+                      <span className="font-bold text-gray-800 text-base">班表營業總額 (Gross)</span>
+                      <span className="font-black text-xl text-[#37352f]">NT$ {shiftData.total}</span>
                     </div>
                     <button 
                       onClick={handleCloseShift} 
-                      className="w-full bg-[#37352f] text-white px-6 py-3 rounded-md font-bold shadow-md hover:bg-black active:scale-95 transition mt-2">
-                      執行交班與結算
+                      className="w-full bg-[#37352f] text-white px-6 py-3 rounded-md font-bold shadow-md hover:bg-black active:scale-95 transition mt-2 font-sans">
+                      結算並清空收銀機 (Z-Report)
                     </button>
-                    <p className="text-xs text-gray-400 mt-3 text-center">結班後將把當前營業額封存歸零，並自動開始下一班的帳務計算。</p>
                   </div>
                 </div>
 
             </div>
           )}
         </div>
+      
+        {showCheckoutModal && (
+          <div className="fixed inset-0 bg-[#37352f]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden border border-[#e9e9e7]">
+              <div className="bg-[#f7f6f3] px-6 py-4 border-b border-[#e9e9e7] flex justify-between items-center">
+                <h2 className="text-xl font-black text-[#37352f]">結帳付款 (標準 POS)</h2>
+                <button onClick={() => setShowCheckoutModal(false)} className="text-[#9a9a97] hover:text-[#37352f]"><AlertCircle size={20} /></button>
+              </div>
+              <div className="p-6 space-y-6">
+                <div className="flex justify-between items-center bg-gray-50 p-4 rounded-md border border-gray-100">
+                  <span className="text-gray-500 font-bold">應收總額</span>
+                  <span className="text-3xl font-black text-[#37352f]">NT$ {cartTotal}</span>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">支付方式</label>
+                  <div className="flex gap-2">
+                    <button onClick={() => setPaymentMethod('cash')} className={`flex-1 py-2 rounded font-bold border transition ${paymentMethod === 'cash' ? 'bg-[#37352f] text-white border-[#37352f]' : 'bg-white text-gray-600 border-[#e9e9e7] hover:bg-gray-50'}`}>現金</button>
+                    <button onClick={() => setPaymentMethod('credit')} className={`flex-1 py-2 rounded font-bold border transition ${paymentMethod === 'credit' ? 'bg-[#37352f] text-white border-[#37352f]' : 'bg-white text-gray-600 border-[#e9e9e7] hover:bg-gray-50'}`}>信用卡</button>
+                    <button onClick={() => setPaymentMethod('mobile')} className={`flex-1 py-2 rounded font-bold border transition ${paymentMethod === 'mobile' ? 'bg-[#37352f] text-white border-[#37352f]' : 'bg-white text-gray-600 border-[#e9e9e7] hover:bg-gray-50'}`}>行動支付</button>
+                  </div>
+                </div>
+
+                {paymentMethod === 'cash' && (
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <label className="block text-sm font-bold text-gray-700 mb-2">實收金額</label>
+                      <input type="number" value={tenderedAmount} onChange={e => setTenderedAmount(Number(e.target.value) || '')} className="w-full border border-[#e9e9e7] px-3 py-2.5 rounded-md font-bold text-lg focus:border-[#37352f] focus:outline-none" />
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-sm font-bold text-gray-700 mb-2">找零</label>
+                      <div className="w-full bg-gray-100 border border-transparent px-3 py-2.5 rounded-md font-black text-lg text-green-600">
+                        NT$ {Math.max(0, (Number(tenderedAmount) || 0) - cartTotal)}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">統一編號 (選填)</label>
+                  <input type="text" maxLength={8} value={taxId} onChange={e => setTaxId(e.target.value)} placeholder="8碼數字統編" className="w-full border border-[#e9e9e7] px-3 py-2 rounded-md font-medium focus:border-[#37352f] focus:outline-none" />
+                </div>
+              </div>
+              <div className="p-4 bg-gray-50 border-t border-[#e9e9e7] flex gap-3">
+                <button onClick={() => setShowCheckoutModal(false)} className="flex-1 py-3 bg-white border border-[#e9e9e7] text-gray-600 font-bold rounded-md hover:bg-gray-100">取消</button>
+                <button onClick={submitCheckout} disabled={paymentMethod === 'cash' && (Number(tenderedAmount) || 0) < cartTotal} className="flex-[2] py-3 bg-[#37352f] text-white font-bold rounded-md hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
+                  確認收款並列印
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </main>
     </div>
   );
