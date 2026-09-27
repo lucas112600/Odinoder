@@ -127,7 +127,11 @@ function OrderingContent() {
     }
   };
 
-  const presetTags = ['少冰', '去冰', '熱', '半糖', '微糖', '無糖', '加辣', '不要蔥', '不要香菜'];
+  const presetTags = ['少冰', '去冰', '熱', '無糖', '微糖', '半糖', '加辣', '不加蔥', '不加香菜'];
+
+  if (!tenantId) {
+    return <div className="p-8 text-center mt-20"><h1 className="text-2xl font-bold mb-4">歡迎光臨</h1><p>請掃描桌面 QR Code 進行點餐</p></div>;
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 pb-32 font-sans text-gray-800 flex flex-col relative">
