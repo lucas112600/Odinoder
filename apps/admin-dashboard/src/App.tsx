@@ -300,7 +300,7 @@ export default function App() {
         <div className="px-4 mb-4 mt-auto">
           <button 
             onClick={() => {
-              const rawConsumerUrl = import.meta.env.VITE_CONSUMER_URL || 'http://localhost:3001';
+              const rawConsumerUrl = import.meta.env.VITE_CONSUMER_URL || 'https://odinoder.pages.dev';
               const consumerUrl = (rawConsumerUrl.endsWith('/') ? rawConsumerUrl.slice(0, -1) : rawConsumerUrl) + `/?store=${tenantId}`;
               navigator.clipboard.writeText(consumerUrl);
               alert('已複製消費者專屬點餐網址！\n\n' + consumerUrl);
@@ -627,7 +627,7 @@ export default function App() {
                   <div key={table} className="bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7] flex flex-col items-center print:border-gray-400 print:shadow-none print:p-4">
                     <p className="text-2xl font-black text-[#37352f] mb-4 tracking-widest">{table}桌</p>
                     <img 
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`${(import.meta.env.VITE_CONSUMER_URL || 'http://localhost:3001').replace(/\/$/, '')}/?store=${tenantId}&table=${table}`)}`} 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`${(import.meta.env.VITE_CONSUMER_URL || 'https://odinoder.pages.dev').replace(/\/$/, '')}/?store=${tenantId}&table=${table}`)}`} 
                       alt={`Table ${table} QR`}
                       className="w-48 h-48 print:w-40 print:h-40"
                     />
