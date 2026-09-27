@@ -13,6 +13,7 @@ export class RawMaterialsService {
         stock: data.stock,
         unit: data.unit,
         safetyStock: data.safetyStock,
+        barcode: data.barcode || null,
         tenantId: data.tenantId,
       }
     });
