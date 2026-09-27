@@ -13,7 +13,7 @@ export class OrdersService {
   async create(data: Prisma.OrderCreateInput) {
     
     // Find or create active shift
-    const tenantId = (data.tenant.connect as any).id;
+    const tenantId = (data as any).tenantId || (data.tenant?.connect as any)?.id;
     let shift = await this.prisma.shift.findFirst({
       where: { tenantId, endTime: null },
       orderBy: { startTime: 'desc' }
