@@ -1,4 +1,5 @@
-import { Package, AlertCircle, Building2, Settings, QrCode } from 'lucide-react';
+import { Package, AlertCircle, Building2, Settings, QrCode, CheckCircle, Clock, XCircle, CreditCard } from 'lucide-react';
+import { io } from 'socket.io-client';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
 import React, { useState, useEffect, useRef } from 'react';
@@ -122,6 +123,16 @@ export default function App() {
     } catch(e) {}
   };
   
+  const updateOrderStatus = async (id: string, status: string) => {
+    try {
+      await fetch(`${API_BASE}/orders/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+    } catch(e) {}
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('admin_tenantId');
     localStorage.removeItem('admin_tenantName');
