@@ -12,7 +12,8 @@ export default function App() {
   const [availableStores, setAvailableStores] = useState<any[]>([]);
   const [newStoreName, setNewStoreName] = useState('');
 
-  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'settings' | 'qrcodes' | 'inventory' | 'pos'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'settings' | 'qrcodes' | 'inventory' | 'pos' | 'history'>('orders');
+  const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState<{product: any, quantity: number}[]>([]);
   const [walkInTable, setWalkInTable] = useState('外帶');
   const [products, setProducts] = useState<any[]>([]);
@@ -364,6 +365,11 @@ export default function App() {
               onClick={() => setActiveTab('pos')}
               className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'pos' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
               <ShoppingCart size={20} className="mr-3" /> 櫃檯收銀 (POS)
+            </button>
+            <button 
+              onClick={() => setActiveTab('history')}
+              className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'history' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
+              <History size={20} className="mr-3" /> 歷史紀錄與查詢
             </button>
           <button 
             onClick={() => setActiveTab('inventory')}
@@ -822,7 +828,74 @@ export default function App() {
           )}
 
 
-          {activeTab === 'settings' && (
+          
+            {activeTab === 'history' && (
+              <div className="animate-in fade-in duration-300 max-w-6xl mx-auto h-full flex flex-col">
+                <div className="mb-6 flex justify-between items-end">
+                  <div>
+                    <h3 className="text-2xl font-black text-[#37352f]">歷史訂單查詢</h3>
+                    <p className="text-sm text-[#9a9a97] mt-1">搜尋與檢視所有歷史訂單明細</p>
+                  </div>
+                  <div className="relative w-72">
+                    <Search size={18} className="absolute left-3 top-3 text-[#9a9a97]" />
+                    <input 
+                      type="text" 
+                      placeholder="搜尋訂單編號或桌號..." 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 border border-[#e9e9e7] rounded-md font-bold text-sm focus:outline-none focus:border-[#37352f]"
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-[#e9e9e7] overflow-hidden flex-1 flex flex-col">
+                  <div className="overflow-x-auto flex-1">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="bg-[#f7f6f3] border-b border-[#e9e9e7] text-[#9a9a97] text-xs uppercase tracking-wider">
+                          <th className="py-4 px-6 font-bold">訂單編號</th>
+                          <th className="py-4 px-6 font-bold">桌號 / 類型</th>
+                          <th className="py-4 px-6 font-bold">時間</th>
+                          <th className="py-4 px-6 font-bold">狀態</th>
+                          <th className="py-4 px-6 font-bold">點餐內容</th>
+                          <th className="py-4 px-6 font-bold text-right">總金額</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {orders
+                          .filter(o => 
+                            o.id.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            (o.tableNumber || '').toLowerCase().includes(searchQuery.toLowerCase())
+                          )
+                          .map(order => (
+                          <tr key={order.id} className="border-b border-[#e9e9e7] hover:bg-[#f7f6f3]/50 transition group">
+                            <td className="py-4 px-6 font-mono text-sm text-[#37352f]">{order.id.split('-')[0].toUpperCase()}</td>
+                            <td className="py-4 px-6">
+                              <span className="text-xs font-bold bg-gray-200 text-gray-800 px-2 py-1 rounded">
+                                {order.tableNumber || (order.orderType === 'DINE_IN' ? '內用' : (order.orderType === 'TAKEOUT' ? '外帶' : order.orderType)) || '外帶'}
+                              </span>
+                            </td>
+                            <td className="py-4 px-6 text-sm text-[#9a9a97]">{new Date(order.createdAt).toLocaleString()}</td>
+                            <td className="py-4 px-6">
+                              {order.status === 'PENDING' && <span className="text-xs font-bold text-yellow-600 bg-yellow-100 px-2 py-1 rounded">待確認</span>}
+                              {order.status === 'PREPARING' && <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded">製作中</span>}
+                              {order.status === 'COMPLETED' && <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded">已完成</span>}
+                              {order.status === 'VOIDED' && <span className="text-xs font-bold text-red-600 bg-red-100 px-2 py-1 rounded">已作廢</span>}
+                            </td>
+                            <td className="py-4 px-6 text-sm text-[#37352f]">
+                              {order.items?.map((item: any) => `${item.quantity}x ${item.product?.name}`).join(', ')}
+                            </td>
+                            <td className="py-4 px-6 text-right font-black text-[#37352f]">NT$ {order.totalAmount}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'settings' && (
             <div className="space-y-6 animate-in fade-in duration-300 max-w-4xl mx-auto">
               <div className="mb-6">
                 <h3 className="text-2xl font-black text-[#37352f]">系統設定</h3>
