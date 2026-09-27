@@ -136,6 +136,8 @@ function OrderingContent() {
   }
 
   return (
+    <div className="min-h-screen bg-gray-100 flex justify-center">
+      <div className="w-full max-w-md bg-white min-h-screen relative shadow-2xl">
     <main className="min-h-screen bg-[#f7f6f3] pb-32 font-sans text-[#37352f] flex flex-col relative">
       <header className="bg-white shadow-sm sticky top-0 z-10 px-5 py-4 flex justify-between items-center">
         <div>
