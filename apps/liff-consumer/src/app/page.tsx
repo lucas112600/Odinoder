@@ -3,6 +3,8 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { ShoppingCart, CheckCircle, Clock, X, MessageSquare, Plus, Minus } from 'lucide-react';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://odinoder-api.onrender.com';
+
 interface CartItem {
   cartItemId: string;
   product: any;
@@ -35,7 +37,7 @@ function OrderingContent() {
   const [customQty, setCustomQty] = useState(1);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/tenant/${tenantId}`)
+    fetch(`${API_BASE}/products/tenant/${tenantId}`)
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(e => console.error('無法載入菜單', e));
@@ -91,7 +93,7 @@ function OrderingContent() {
     }));
 
     try {
-      const res = await fetch('http://localhost:3000/orders', {
+      const res = await fetch(`${API_BASE}/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

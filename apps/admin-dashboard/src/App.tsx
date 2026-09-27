@@ -1,4 +1,6 @@
 import { Package, AlertCircle, Building2 } from 'lucide-react';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
 import React, { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
@@ -21,7 +23,7 @@ export default function App() {
   // 取得可登入的門市列表
   useEffect(() => {
     if (!tenantId) {
-      fetch('http://localhost:3000/tenants')
+      fetch(`${API_BASE}/tenants`)
         .then(res => res.json())
         .then(setAvailableStores)
         .catch(e => console.error(e));
@@ -32,7 +34,7 @@ export default function App() {
   const handleCreateStore = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:3000/tenants', {
+      const res = await fetch(`${API_BASE}/tenants`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newStoreName })
@@ -58,7 +60,7 @@ export default function App() {
   const handleDeleteStore = async (storeId: string) => {
     if (window.confirm('確定要刪除此門市嗎？此動作將連同該門市所有商品與訂單一併刪除，且無法復原！')) {
       try {
-        await fetch(`http://localhost:3000/tenants/${storeId}`, { method: 'DELETE' });
+        await fetch(`${API_BASE}/tenants/${storeId}`, { method: 'DELETE' });
         setAvailableStores(availableStores.filter(s => s.id !== storeId));
       } catch (e) {
         alert('刪除失敗');
@@ -71,7 +73,7 @@ export default function App() {
   const fetchRawMaterials = async () => {
     if(!tenantId) return;
     try {
-      const res = await fetch(`http://localhost:3000/raw-materials/tenant/${tenantId}`);
+      const res = await fetch(`${API_BASE}/raw-materials/tenant/${tenantId}`);
       setRawMaterials(await res.json());
     } catch(e) {}
   };
@@ -83,7 +85,7 @@ export default function App() {
   const handleCreateMaterial = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:3000/raw-materials', {
+      const res = await fetch(`${API_BASE}/raw-materials`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...newMaterial, stock: Number(newMaterial.stock), safetyStock: Number(newMaterial.safetyStock), tenantId })
@@ -99,7 +101,7 @@ export default function App() {
   const handleDeleteMaterial = async (id: string) => {
     if(!confirm('確定刪除此原物料？')) return;
     try {
-      await fetch(`http://localhost:3000/raw-materials/${id}`, { method: 'DELETE' });
+      await fetch(`${API_BASE}/raw-materials/${id}`, { method: 'DELETE' });
       fetchRawMaterials();
     } catch(e){}
   };
@@ -107,7 +109,7 @@ export default function App() {
   const handleUpdateStoreProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:3000/tenants/${tenantId}`, {
+      const res = await fetch(`${API_BASE}/tenants/${tenantId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: tenantName })
@@ -129,13 +131,13 @@ export default function App() {
   useEffect(() => {
     if (!tenantId) return;
     const fetchProducts = async () => {
-      const res = await fetch(`http://localhost:3000/products/tenant/${tenantId}`);
+      const res = await fetch(`${API_BASE}/products/tenant/${tenantId}`);
       setProducts(await res.json());
     };
     
 
   const fetchOrders = async () => {
-      const res = await fetch(`http://localhost:3000/orders/tenant/${tenantId}`);
+      const res = await fetch(`${API_BASE}/orders/tenant/${tenantId}`);
       setOrders(await res.json());
     };
     fetchProducts();
@@ -146,7 +148,7 @@ export default function App() {
     e.preventDefault();
     try {
       const isEditing = !!editingProduct.id;
-      const url = isEditing ? `http://localhost:3000/products/${editingProduct.id}` : `http://localhost:3000/products`;
+      const url = isEditing ? `${API_BASE}/products/${editingProduct.id}` : `${API_BASE}/products`;
       const method = isEditing ? 'PATCH' : 'POST';
       
       await fetch(url, {
@@ -162,7 +164,7 @@ export default function App() {
       });
       setEditingProduct(null);
       // 重新整理列表
-      const res = await fetch(`http://localhost:3000/products/tenant/${tenantId}`);
+      const res = await fetch(`${API_BASE}/products/tenant/${tenantId}`);
       setProducts(await res.json());
     } catch (e) {}
   };
@@ -582,7 +584,7 @@ export default function App() {
                   <div key={table} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center print:border-gray-400 print:shadow-none print:p-4">
                     <p className="text-2xl font-black text-gray-900 mb-4 tracking-widest">{table}桌</p>
                     <img 
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`http://localhost:3001/?store=${tenantId}&table=${table}`)}`} 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`https://odinoder.pages.dev/?store=${tenantId}&table=${table}`)}`} 
                       alt={`Table ${table} QR`}
                       className="w-48 h-48 print:w-40 print:h-40"
                     />

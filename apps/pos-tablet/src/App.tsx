@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
+
 // 音效提示函數
 const playBeep = () => {
   try {
@@ -37,7 +39,7 @@ export default function App() {
   // 取得可登入的門市列表
   useEffect(() => {
     if (!tenantId) {
-      fetch('http://localhost:3000/tenants')
+      fetch(`${API_BASE}/tenants`)
         .then(res => res.json())
         .then(setAvailableStores)
         .catch(e => console.error(e));
@@ -54,7 +56,7 @@ export default function App() {
   const fetchOrders = async () => {
     if (!tenantId) return;
     try {
-      const res = await fetch(`http://localhost:3000/orders/tenant/${tenantId}`);
+      const res = await fetch(`${API_BASE}/orders/tenant/${tenantId}`);
       const data = await res.json();
       const formatted = data.map((o: any) => ({
         id: o.id,
@@ -83,7 +85,7 @@ export default function App() {
     if (!tenantId) return;
     fetchOrders();
 
-    const socket = io('http://localhost:3000');
+    const socket = io(`${API_BASE}`);
     socket.on('connect', () => socket.emit('joinTenant', tenantId));
 
     socket.on('newOrder', (o) => {
@@ -147,7 +149,7 @@ export default function App() {
     if (!window.confirm('確定要作廢這筆訂單嗎？作廢後將不計入今日營業額。')) return;
     setOrders(orders.map(o => o.id === id ? { ...o, status: '已作廢' } : o));
     try {
-      await fetch(`http://localhost:3000/orders/${id}/status`, {
+      await fetch(`${API_BASE}/orders/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'VOIDED' })
@@ -159,7 +161,7 @@ export default function App() {
     const nextStatus = currentStatus === '等待接單' ? 'PREPARING' : 'COMPLETED';
     setOrders(orders.map(o => o.id === id ? { ...o, status: nextStatus === 'PREPARING' ? '準備中' : '已完成' } : o));
     try {
-      await fetch(`http://localhost:3000/orders/${id}/status`, {
+      await fetch(`${API_BASE}/orders/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: nextStatus })
