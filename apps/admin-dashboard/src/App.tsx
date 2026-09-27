@@ -1,4 +1,4 @@
-import { Package, AlertCircle, Building2, Settings, QrCode, CheckCircle, Clock } from 'lucide-react';
+import { Package, AlertCircle, Building2, Settings, QrCode, CheckCircle, Clock, ShoppingCart, Plus, Minus } from 'lucide-react';
 import { io } from 'socket.io-client';
 
 const rawApiUrl = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
@@ -12,7 +12,9 @@ export default function App() {
   const [availableStores, setAvailableStores] = useState<any[]>([]);
   const [newStoreName, setNewStoreName] = useState('');
 
-  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'settings' | 'qrcodes' | 'inventory'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'settings' | 'qrcodes' | 'inventory' | 'pos'>('orders');
+  const [cart, setCart] = useState<{product: any, quantity: number}[]>([]);
+  const [walkInTable, setWalkInTable] = useState('外帶');
   const [products, setProducts] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [rawMaterials, setRawMaterials] = useState<any[]>([]);
@@ -192,6 +194,53 @@ const updateOrderStatus = async (id: string, status: string) => {
     };
     
 
+  
+  const addToCart = (product: any) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.product.id === product.id);
+      if (existing) {
+        return prev.map(item => item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
+      }
+      return [...prev, { product, quantity: 1 }];
+    });
+  };
+
+  const updateCartQuantity = (productId: string, delta: number) => {
+    setCart(prev => prev.map(item => {
+      if (item.product.id === productId) {
+        return { ...item, quantity: Math.max(0, item.quantity + delta) };
+      }
+      return item;
+    }).filter(item => item.quantity > 0));
+  };
+
+  const cartTotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+
+  const handlePOSCheckout = async () => {
+    if (cart.length === 0) return;
+    try {
+      const res = await fetch(`${API_BASE}/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenantId,
+          table: walkInTable,
+          totalAmount: cartTotal,
+          items: cart.map(item => ({
+            productId: item.product.id,
+            quantity: item.quantity,
+            price: item.product.price
+          }))
+        })
+      });
+      if(res.ok) {
+        setCart([]);
+        alert('結帳成功！訂單已送至廚房看板。');
+        setActiveTab('orders'); // 切換回看板看單
+      }
+    } catch(e) {}
+  };
+
   const fetchOrders = async () => {
     try {
       const res = await fetch(`${API_BASE}/orders/tenant/${tenantId}`);
@@ -319,27 +368,32 @@ const updateOrderStatus = async (id: string, status: string) => {
           <p className="px-4 text-xs font-bold text-gray-400 tracking-wider mb-2">營運管理</p>
           <button 
             onClick={() => setActiveTab('orders')}
-            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'orders' ? 'bg-blue-600 text-[#37352f] shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-[#37352f]'}`}>
+            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'orders' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
              營業數據分析
           </button>
+            <button 
+              onClick={() => setActiveTab('pos')}
+              className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'pos' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
+              <ShoppingCart size={20} className="mr-3" /> 櫃檯收銀 (POS)
+            </button>
           <button 
             onClick={() => setActiveTab('inventory')}
-            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'inventory' ? 'bg-blue-600 text-[#37352f] shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-[#37352f]'}`}>
+            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'inventory' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
             <Package size={20} className="mr-3" /> 原物料庫存
           </button>
           <button 
             onClick={() => setActiveTab('products')}
-            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'products' ? 'bg-blue-600 text-[#37352f] shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-[#37352f]'}`}>
+            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'products' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
              商品目錄庫
           </button>
           <button 
             onClick={() => setActiveTab('qrcodes')}
-            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'qrcodes' ? 'bg-blue-600 text-[#37352f] shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-[#37352f]'}`}>
+            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'qrcodes' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
              桌位QR列印
           </button>
           <button 
             onClick={() => setActiveTab('settings')}
-            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'settings' ? 'bg-blue-600 text-[#37352f] shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-[#37352f]'}`}>
+            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'settings' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
              系統設定
           </button>
         </div>
@@ -646,6 +700,74 @@ const updateOrderStatus = async (id: string, status: string) => {
                 </div>
               </div>
             )}
+            
+            {activeTab === 'pos' && (
+              <div className="flex space-x-6 h-full max-w-7xl mx-auto animate-in fade-in duration-300">
+                {/* 左側商品區 */}
+                <div className="flex-1 bg-[#f7f6f3] p-6 rounded-lg border border-[#e9e9e7] overflow-auto h-[80vh]">
+                  <h3 className="text-xl font-black text-[#37352f] mb-6">點餐區</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {products.map(p => (
+                      <div key={p.id} onClick={() => !p.isSoldOut && addToCart(p)} className={`bg-white p-4 rounded-lg border border-[#e9e9e7] shadow-sm flex flex-col items-center justify-center text-center transition ${p.isSoldOut ? 'opacity-50 grayscale' : 'cursor-pointer hover:border-[#37352f] active:scale-95'}`}>
+                        {p.imageUrl ? (
+                          <img src={p.imageUrl} alt={p.name} className="w-16 h-16 object-cover rounded-md mb-3" />
+                        ) : (
+                          <div className="w-16 h-16 bg-[#f7f6f3] rounded-md mb-3 flex items-center justify-center text-[#9a9a97] text-xs">無圖</div>
+                        )}
+                        <h4 className="font-bold text-[#37352f] text-sm mb-1">{p.name}</h4>
+                        <span className="text-[#37352f] font-black">NT$ {p.price}</span>
+                        {p.isSoldOut && <span className="text-xs text-red-500 font-bold mt-1">售完</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 右側購物車區 */}
+                <div className="w-96 bg-white p-6 rounded-lg border border-[#e9e9e7] shadow-sm flex flex-col h-[80vh]">
+                  <h3 className="text-xl font-black text-[#37352f] mb-4 flex items-center justify-between">
+                    結帳明細
+                    <span className="bg-[#f7f6f3] px-3 py-1 rounded text-sm text-[#9a9a97]">{cart.reduce((s, i)=>s+i.quantity,0)} 項</span>
+                  </h3>
+                  
+                  <div className="mb-4">
+                    <label className="block text-xs font-bold text-[#9a9a97] mb-1">桌號 / 識別碼 (例如: 外帶, 3桌)</label>
+                    <input type="text" value={walkInTable} onChange={e => setWalkInTable(e.target.value)} className="w-full border border-[#e9e9e7] bg-[#f7f6f3] px-3 py-2 rounded-md font-bold focus:outline-none focus:bg-white focus:border-[#37352f]" />
+                  </div>
+
+                  <div className="flex-1 overflow-auto space-y-3 pr-2 mb-4">
+                    {cart.length === 0 ? (
+                      <div className="text-center text-[#9a9a97] mt-10 text-sm font-medium">購物車是空的</div>
+                    ) : cart.map(item => (
+                      <div key={item.product.id} className="flex justify-between items-center py-2 border-b border-[#e9e9e7] last:border-0">
+                        <div className="flex-1">
+                          <h5 className="font-bold text-[#37352f] text-sm">{item.product.name}</h5>
+                          <p className="text-xs text-[#9a9a97]">NT$ {item.product.price}</p>
+                        </div>
+                        <div className="flex items-center space-x-3 bg-[#f7f6f3] rounded-md px-2 py-1">
+                          <button onClick={() => updateCartQuantity(item.product.id, -1)} className="text-[#9a9a97] hover:text-[#37352f]"><Minus size={16} /></button>
+                          <span className="font-black text-sm text-[#37352f] w-4 text-center">{item.quantity}</span>
+                          <button onClick={() => updateCartQuantity(item.product.id, 1)} className="text-[#9a9a97] hover:text-[#37352f]"><Plus size={16} /></button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-4 border-t border-[#e9e9e7]">
+                    <div className="flex justify-between items-end mb-6">
+                      <span className="text-sm font-bold text-[#9a9a97]">總金額</span>
+                      <span className="text-3xl font-black text-[#37352f]">NT$ {cartTotal}</span>
+                    </div>
+                    <button 
+                      onClick={handlePOSCheckout}
+                      disabled={cart.length === 0}
+                      className={`w-full py-4 rounded-md font-bold text-lg transition ${cart.length > 0 ? 'bg-[#37352f] text-white hover:bg-[#2f2e2a] shadow-md active:scale-95' : 'bg-[#e9e9e7] text-[#9a9a97] cursor-not-allowed'}`}>
+                      確認結帳
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {activeTab === 'qrcodes' && (
             <div className="space-y-6 animate-in fade-in duration-300 max-w-5xl mx-auto print:max-w-none print:m-0 print:p-0">
               <div className="mb-6 flex justify-between items-end print:hidden">
