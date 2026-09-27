@@ -319,7 +319,7 @@ export default function App() {
               <h3 className="text-sm font-bold text-[#9a9a97] mb-3">或者建立新門市：</h3>
               <form onSubmit={handleCreateStore} className="flex space-x-2">
                 <input type="text" placeholder="輸入新門市名稱" value={newStoreName} onChange={e => setNewStoreName(e.target.value)} required className="flex-1 border border-[#e9e9e7] px-4 py-2.5 rounded-md text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
-                <button type="submit" className="bg-gray-900 text-[#37352f] px-5 py-2.5 rounded-md font-bold text-sm shadow-md hover:bg-black transition active:scale-95">註冊</button>
+                <button type="submit" className="bg-[#37352f] text-white px-5 py-2.5 rounded-md font-bold text-sm shadow-md hover:bg-black transition active:scale-95">註冊</button>
               </form>
             </div>
           </div>
@@ -439,7 +439,7 @@ export default function App() {
                   <h4 className="font-bold text-[#37352f] mb-4 flex items-center"><QrCode size={18} className="mr-2"/> 條碼快速進貨 (Barcode Scanner)</h4>
                   <form onSubmit={handleScanSubmit} className="flex space-x-3">
                     <input type="text" value={scanBarcode} onChange={e => setScanBarcode(e.target.value)} placeholder="請將游標停在此處，並使用條碼掃描槍刷入..." className="flex-1 border border-[#e9e9e7] px-4 py-3 rounded-md font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none shadow-inner" autoFocus />
-                    <button type="submit" className="bg-blue-600 text-[#37352f] px-6 py-3 rounded-md font-bold shadow-md hover:bg-[#2f2e2a] active:scale-95">送出條碼</button>
+                    <button type="submit" className="bg-[#37352f] text-white px-6 py-3 rounded-md font-bold shadow-md hover:bg-[#2f2e2a] active:scale-95">送出條碼</button>
                   </form>
                 </div>
                 
@@ -462,7 +462,7 @@ export default function App() {
                     <label className="block text-xs font-bold text-[#9a9a97] mb-1.5">安全警報水位</label>
                     <input type="number" value={newMaterial.safetyStock} onChange={e => setNewMaterial({...newMaterial, safetyStock: e.target.value})} className="w-full border border-[#e9e9e7] bg-gray-50 px-4 py-2.5 rounded-md font-medium focus:outline-none focus:bg-white focus:border-[#37352f]" required/>
                   </div>
-                  <button type="submit" className="bg-blue-600 text-[#37352f] px-6 py-2.5 rounded-md font-bold shadow-md hover:bg-[#2f2e2a] active:scale-95 mb-[2px]">
+                  <button type="submit" className="bg-[#37352f] text-white px-6 py-2.5 rounded-md font-bold shadow-md hover:bg-[#2f2e2a] active:scale-95 mb-[2px]">
                     + 新增物料
                   </button>
                 </form>
@@ -508,7 +508,7 @@ export default function App() {
                 </div>
                 <button 
                   onClick={() => setEditingProduct({ name: '', price: '' })}
-                  className="bg-blue-600 text-[#37352f] px-6 py-2.5 rounded-md font-bold hover:bg-[#2f2e2a] transition shadow-lg shadow-blue-200 active:scale-95">
+                  className="bg-[#37352f] text-white px-6 py-2.5 rounded-md font-bold hover:bg-[#2f2e2a] transition shadow-lg shadow-blue-200 active:scale-95">
                   ➕ 新增商品
                 </button>
               </div>
@@ -555,7 +555,7 @@ export default function App() {
                     </div>
                     
                     <div className="shrink-0 flex items-end">
-                      <button type="submit" className="bg-gray-900 text-[#37352f] px-8 py-3 rounded-md font-bold hover:bg-black transition shadow-md active:scale-95 h-[46px]">
+                      <button type="submit" className="bg-[#37352f] text-white px-8 py-3 rounded-md font-bold hover:bg-black transition shadow-md active:scale-95 h-[46px]">
                         儲存變更
                       </button>
                     </div>
@@ -720,6 +720,11 @@ export default function App() {
                   
                   <div className="mb-4">
                     <label className="block text-xs font-bold text-[#9a9a97] mb-1">桌號 / 識別碼 (例如: 外帶, 3桌)</label>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {['外帶', '內用', ...tables].map(t => (
+                        <button type="button" key={t} onClick={() => setWalkInTable(t)} className={`px-3 py-1.5 rounded-md text-xs font-bold border transition ${walkInTable === t ? 'bg-[#37352f] text-white border-[#37352f]' : 'bg-white text-[#37352f] border-[#e9e9e7] hover:bg-[#f7f6f3]'}`}>{t}</button>
+                      ))}
+                    </div>
                     <input type="text" value={walkInTable} onChange={e => setWalkInTable(e.target.value)} className="w-full border border-[#e9e9e7] bg-[#f7f6f3] px-3 py-2 rounded-md font-bold focus:outline-none focus:bg-white focus:border-[#37352f]" />
                   </div>
 
@@ -781,7 +786,7 @@ export default function App() {
                     <input type="text" placeholder="新增桌號..." value={newTable} onChange={e => setNewTable(e.target.value)} className="border border-[#e9e9e7] px-3 py-2 rounded-l-xl text-sm focus:outline-none focus:border-[#37352f] w-32" />
                     <button type="submit" className="bg-gray-100 px-4 py-2 text-sm font-bold border border-l-0 border-[#e9e9e7] rounded-r-xl hover:bg-gray-200">新增</button>
                   </form>
-                  <button onClick={() => window.print()} className="bg-blue-600 text-[#37352f] px-6 py-2 rounded-md font-bold shadow-md hover:bg-[#2f2e2a] active:scale-95">
+                  <button onClick={() => window.print()} className="bg-[#37352f] text-white px-6 py-2 rounded-md font-bold shadow-md hover:bg-[#2f2e2a] active:scale-95">
                     🖨️ 列印全部
                   </button>
                 </div>
@@ -839,7 +844,7 @@ export default function App() {
                         <option value="closed">🔴 暫停營業 (打烊)</option>
                       </select>
                     </div>
-                    <button type="submit" className="bg-gray-900 text-[#37352f] px-6 py-2.5 rounded-md font-bold shadow-md hover:bg-black active:scale-95 w-32 mt-2">
+                    <button type="submit" className="bg-[#37352f] text-white px-6 py-2.5 rounded-md font-bold shadow-md hover:bg-black active:scale-95 w-32 mt-2">
                       儲存變更
                     </button>
                   </div>
