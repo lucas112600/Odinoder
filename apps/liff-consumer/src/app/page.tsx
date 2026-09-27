@@ -18,9 +18,7 @@ function OrderingContent() {
   const tenantId = searchParams.get('store');
   const tableNumber = searchParams.get('table') || '未指定桌號';
 
-  if (!tenantId) {
-    return <div className="p-8 text-center mt-20"><h1 className="text-2xl font-bold mb-4">歡迎光臨</h1><p>請掃描桌面 QR Code 進行點餐</p></div>;
-  }
+
   
   const [products, setProducts] = useState<any[]>([]);
   const [tenantName, setTenantName] = useState<string>('');
@@ -38,6 +36,7 @@ function OrderingContent() {
   const [customQty, setCustomQty] = useState(1);
 
   useEffect(() => {
+    if (!tenantId) return;
     fetch(`${API_BASE}/tenants/${tenantId}`)
       .then(res => res.json())
       .then(data => setTenantName(data.name || ''))
