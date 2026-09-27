@@ -23,6 +23,7 @@ export default function App() {
   const [scanBarcode, setScanBarcode] = useState('');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [tables, setTables] = useState<string[]>([]);
+  const [presetTags, setPresetTags] = useState<string>('少冰,去冰,熱,無糖,微糖,半糖,加辣,不加蔥,不加香菜');
   const [newTable, setNewTable] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -118,7 +119,7 @@ export default function App() {
       const res = await fetch(`${API_BASE}/tenants/${tenantId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: tenantName })
+        body: JSON.stringify({ name: tenantName, presetTags: presetTags.split(',').map(s => s.trim()).filter(Boolean) })
       });
       if(res.ok) {
         localStorage.setItem('admin_tenantName', tenantName || '');
@@ -219,7 +220,8 @@ export default function App() {
       try {
         const res = await fetch(`${API_BASE}/tenants/${tenantId}`);
         const data = await res.json();
-        if (data.tables && data.tables.length > 0) {
+        if (data.presetTags) { setPresetTags(data.presetTags.join(',')); }
+          if (data.tables && data.tables.length > 0) {
           setTables(data.tables);
         } else {
           // If empty, sync default
@@ -294,7 +296,7 @@ export default function App() {
       <div className="min-h-screen bg-[#f7f6f3] flex items-center justify-center p-4 font-sans text-slate-800">
         <div className="bg-white border border-[#e9e9e7] rounded-lg shadow-sm w-full max-w-4xl flex overflow-hidden min-h-[500px]">
           <div className="w-1/2 bg-[#f7f6f3] text-[#37352f] p-12 border-r border-[#e9e9e7] flex flex-col justify-center">
-            <h1 className="text-4xl font-black mb-4">營運總部 總營運管理</h1>
+            <h1 className="text-4xl font-black mb-4 text-[#37352f]">{tenantName || 'Odinoder'} 營運總部</h1>
             <p className="text-[#787774] leading-relaxed font-medium">歡迎回到雲端 SaaS 門市管理系統。請在右側選擇您要管理的門市，或是建立全新的餐飲品牌據點。</p>
           </div>
           <div className="w-1/2 p-12 flex flex-col h-[500px] overflow-auto">
@@ -422,7 +424,7 @@ export default function App() {
       <main className="flex-1 flex flex-col h-full overflow-auto">
         <header className="h-20 bg-white sticky top-0 flex items-center justify-between px-8 z-10 border-b border-[#e9e9e7]">
           <h2 className="text-xl font-bold text-[#37352f]">
-            {activeTab === 'orders' ? '營業數據分析 (Dashboard)' : activeTab === 'products' ? '商品目錄庫 (Products)' : activeTab === 'inventory' ? '原物料庫存 (Inventory)' : '系統設定 (Settings)'}
+            {activeTab === 'orders' ? '接單看板 (Kanban)' : activeTab === 'products' ? '商品目錄庫 (Products)' : activeTab === 'inventory' ? '原物料庫存 (Inventory)' : '系統設定 (Settings)'}
           </h2>
           <div className="flex items-center space-x-4">
             <button onClick={() => alert('目前沒有新的系統通知！')} className="relative w-10 h-10 bg-white border border-[#e9e9e7] rounded-full flex items-center justify-center text-[#9a9a97] shadow-sm hover:bg-gray-50 transition active:scale-95">
@@ -910,6 +912,11 @@ export default function App() {
                       <label className="block text-sm font-bold text-gray-700 mb-2">門市名稱</label>
                       <input type="text" value={tenantName || ''} onChange={e => setTenantName(e.target.value)} className="w-full border border-[#e9e9e7] bg-white px-4 py-2.5 rounded-md font-medium focus:outline-none focus:border-[#37352f]" />
                     </div>
+                      <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">快速點餐口味與備註 (請用逗號分隔)</label>
+                        <input type="text" value={presetTags} onChange={e => setPresetTags(e.target.value)} placeholder="少冰,去冰,無糖..." className="w-full border border-[#e9e9e7] bg-white px-4 py-2.5 rounded-md font-medium focus:outline-none focus:border-[#37352f]" />
+                        <p className="text-xs text-gray-400 mt-1">客人用手機掃碼點餐時，可以快速點選的按鈕選項。</p>
+                      </div>
                     <div>
                       <label className="block text-sm font-bold text-gray-700 mb-2">營業狀態</label>
                       <select className="w-full border border-[#e9e9e7] bg-white px-4 py-2.5 rounded-md font-medium focus:outline-none focus:border-[#37352f]">
