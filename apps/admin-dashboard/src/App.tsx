@@ -1,4 +1,4 @@
-import { Package, AlertCircle, Building2, Settings, QrCode, CheckCircle, Clock, ShoppingCart, Plus, Minus } from 'lucide-react';
+import { History, Search, Package, AlertCircle, Building2, Settings, QrCode, CheckCircle, Clock, ShoppingCart, Plus, Minus } from 'lucide-react';
 import { io } from 'socket.io-client';
 
 const rawApiUrl = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
