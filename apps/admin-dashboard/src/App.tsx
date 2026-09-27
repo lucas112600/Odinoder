@@ -1,4 +1,4 @@
-import { Package, AlertCircle, Building2 } from 'lucide-react';
+import { Package, AlertCircle, Building2, LayoutDashboard, ShoppingBag, Settings, QrCode, ClipboardList, LogOut, Link as LinkIcon } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
 import React, { useState, useEffect, useRef } from 'react';
@@ -264,35 +264,35 @@ export default function App() {
       <aside className="w-64 bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] flex flex-col z-20 print:hidden">
         <div className="h-20 flex items-center px-8 border-b border-gray-100">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black text-lg mr-3 shadow-md shadow-blue-200">O</div>
-          <h1 className="text-xl font-black text-gray-900 tracking-tight">營運總部</h1>
+          <h1 className="text-xl font-black text-white tracking-tight">營運總部</h1>
         </div>
         
         <div className="flex-1 py-6 px-4 space-y-2">
           <p className="px-4 text-xs font-bold text-gray-400 tracking-wider mb-2">營運管理</p>
           <button 
             onClick={() => setActiveTab('orders')}
-            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'orders' ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:bg-gray-50'}`}>
-            <span className="text-lg mr-3">📊</span> 營業數據分析
+            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'orders' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+             營業數據分析
           </button>
           <button 
             onClick={() => setActiveTab('inventory')}
-            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'inventory' ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:bg-gray-50'}`}>
-            <Package size={20} className={`mr-3 ${activeTab === 'inventory' ? 'text-blue-500' : 'text-gray-500'}`} /> 原物料庫存
+            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'inventory' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+            <Package size={20} className="mr-3" /> 原物料庫存
           </button>
           <button 
             onClick={() => setActiveTab('products')}
-            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'products' ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:bg-gray-50'}`}>
-            <span className="text-lg mr-3">🛍️</span> 商品目錄庫
+            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'products' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+             商品目錄庫
           </button>
           <button 
             onClick={() => setActiveTab('qrcodes')}
-            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'qrcodes' ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:bg-gray-50'}`}>
-            <span className="text-lg mr-3">🖨️</span> 桌位QR列印
+            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'qrcodes' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+             桌位QR列印
           </button>
           <button 
             onClick={() => setActiveTab('settings')}
-            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'settings' ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:bg-gray-50'}`}>
-            <span className="text-lg mr-3">⚙️</span> 系統設定
+            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'settings' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+             系統設定
           </button>
         </div>
 
@@ -303,17 +303,17 @@ export default function App() {
               navigator.clipboard.writeText(consumerUrl);
               alert('已複製消費者專屬點餐網址！\n\n' + consumerUrl);
             }}
-            className="w-full flex items-center justify-center px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 transition shadow-sm border border-indigo-100 active:scale-95 text-sm">
+            className="w-full flex items-center justify-center px-4 py-3 bg-blue-600/20 text-blue-400 rounded-xl font-bold hover:bg-blue-600/30 transition shadow-sm border border-blue-500/30 active:scale-95 text-sm">
             🔗 複製專屬點餐網址
           </button>
         </div>
 
-        <div className="p-4 border-t border-gray-100">
-          <div className="bg-gray-50 rounded-xl p-4 flex items-center space-x-3 border border-gray-100">
+        <div className="p-4 border-t border-slate-800">
+          <div className="bg-slate-800 rounded-xl p-4 flex items-center space-x-3 border border-slate-700">
             <img src="https://ui-avatars.com/api/?name=Admin&background=1e3a8a&color=fff" alt="avatar" className="w-10 h-10 rounded-full shadow-sm" />
             <div>
-              <p className="text-sm font-bold text-gray-800">系統管理員</p>
-              <p className="text-xs text-gray-500 font-medium">{tenantName || '未命名門市'}</p>
+              <p className="text-sm font-bold text-white">系統管理員</p>
+              <p className="text-xs text-slate-400 font-medium">{tenantName || '未命名門市'}</p>
               <button onClick={handleLogout} className="text-xs text-blue-600 hover:text-blue-800 font-bold mt-1 underline">切換門市</button>
             </div>
           </div>
@@ -646,12 +646,12 @@ export default function App() {
             <div className="space-y-6 animate-in fade-in duration-300 max-w-4xl mx-auto">
               <div className="mb-6">
                 <h3 className="text-2xl font-black text-gray-900">系統設定</h3>
-                <p className="text-sm text-gray-500 mt-1">管理門市基本資料與硬體設備連線狀態。</p>
+                <p className="text-sm text-gray-500 mt-1">管理<Settings size={20} className="mr-3" /> 門市基本資料與硬體設備連線狀態。</p>
               </div>
 
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 space-y-8">
                 <form onSubmit={handleUpdateStoreProfile} className="mb-8">
-                  <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center"><Building2 size={20} className="mr-2 text-blue-600" /> 門市基本資料維護</h4>
+                  <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center"><Building2 size={20} className="mr-2 text-blue-600" /> <Settings size={20} className="mr-3" /> 門市基本資料維護</h4>
                   <div className="flex flex-col space-y-4 max-w-md">
                     <div>
                       <label className="block text-sm font-bold text-gray-700 mb-2">門市名稱</label>
