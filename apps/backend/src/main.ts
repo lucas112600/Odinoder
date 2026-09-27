@@ -11,7 +11,7 @@ async function bootstrap() {
 
   // 【資安防護 2】CORS 限制 - 拒絕未經授權的網域發起請求 (白名單機制)
   app.enableCors({
-    origin: ['http://localhost:3001', 'http://localhost:5173', 'http://localhost:5174'],
+    origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
