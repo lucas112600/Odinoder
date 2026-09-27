@@ -19,6 +19,9 @@ export default function App() {
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [tenderedAmount, setTenderedAmount] = useState<number | ''>('');
   const [taxId, setTaxId] = useState('');
+  const [isAwaitingPayment, setIsAwaitingPayment] = useState(false);
+  const [paymentStatusMsg, setPaymentStatusMsg] = useState('');
+  const [mobileBarcode, setMobileBarcode] = useState('');
   const [cart, setCart] = useState<{product: any, quantity: number}[]>([]);
   const [walkInTable, setWalkInTable] = useState('外帶');
   const [products, setProducts] = useState<any[]>([]);
@@ -200,9 +203,13 @@ export default function App() {
     setPaymentMethod('cash');
     setTaxId('');
     setShowCheckoutModal(true);
+    setIsAwaitingPayment(false);
+    setPaymentStatusMsg('');
+    setMobileBarcode('');
   };
 
-  const submitCheckout = async () => {
+  
+  const finalizeOrder = async () => {
     try {
       const res = await fetch(`${API_BASE}/orders`, {
         method: 'POST',
@@ -223,11 +230,94 @@ export default function App() {
       if(res.ok) {
         setCart([]);
         setShowCheckoutModal(false);
+        setIsAwaitingPayment(false);
         alert('結帳成功！收據已列印，訂單已送至廚房看板。');
         setActiveTab('orders');
       }
-    } catch(e) {}
+    } catch(e) {
+      alert('系統異常，無法建立訂單');
+      setIsAwaitingPayment(false);
+    }
   };
+
+  const submitCheckout = async () => {
+    if (paymentMethod === 'credit') {
+      setIsAwaitingPayment(true);
+      setPaymentStatusMsg('正在嘗試連線至實體刷卡機 (COM Port)...');
+      
+      // 正規實體刷卡機 (EDC) 連線邏輯：透過本機 WebSocket 中介程式與硬體溝通
+      try {
+        const ws = new WebSocket('ws://127.0.0.1:9090'); // 本機刷卡機中介程式標準 Port
+        
+        // 設定 3 秒連線超時，如果沒接機器會報錯
+        const timeout = setTimeout(() => {
+          ws.close();
+          alert('實體刷卡機連線逾時！請確認刷卡機已開機，且 USB/COM 傳輸線已正確連接。');
+          setIsAwaitingPayment(false);
+        }, 3000);
+
+        ws.onopen = () => {
+          clearTimeout(timeout);
+          setPaymentStatusMsg('請引導客人在刷卡機上感應或插入信用卡...');
+          // 傳送標準 ECR 交易指令 (SALE)
+          ws.send(JSON.stringify({ action: 'SALE', amount: cartTotal, taxId }));
+        };
+        
+        ws.onmessage = (e) => {
+          const response = JSON.parse(e.data);
+          if (response.status === 'SUCCESS') {
+            setPaymentStatusMsg('刷卡成功！正在列印簽單與收據...');
+            finalizeOrder();
+          } else {
+            alert('交易失敗：' + (response.message || '卡片餘額不足或異常'));
+            setIsAwaitingPayment(false);
+          }
+        };
+        
+        ws.onerror = () => {
+          clearTimeout(timeout);
+          alert('無法偵測到實體刷卡機！\n(若為測試環境，請確認本地端 EDC 中介服務是否有啟動)');
+          setIsAwaitingPayment(false);
+        };
+      } catch(e) {
+        alert('刷卡機服務未啟動');
+        setIsAwaitingPayment(false);
+      }
+      return;
+    }
+
+    if (paymentMethod === 'mobile') {
+      if (!mobileBarcode) return alert('請掃描客人的付款條碼！');
+      setIsAwaitingPayment(true);
+      setPaymentStatusMsg('正在向 LINE Pay / 街口支付 伺服器發送扣款請求...');
+      
+      // 正規行動支付 B2B API 呼叫 (通常是 POS 掃描客人條碼後，由後端發起扣款)
+      try {
+        // 實際商用環境中，這裡會呼叫後端的 /payments/scan 進行扣款
+        const paymentRes = await fetch(`${API_BASE}/payments/scan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ barcode: mobileBarcode, amount: cartTotal })
+        });
+        
+        // 由於我們尚未在後端輸入真實 LINE Pay API Key，這裡若回傳 404/500，會進入 catch 或非 ok 處理
+        if (paymentRes.ok) {
+          finalizeOrder();
+        } else {
+          alert('行動支付扣款失敗！API 金鑰未設定或條碼無效。');
+          setIsAwaitingPayment(false);
+        }
+      } catch(e) {
+        alert('行動支付伺服器連線失敗');
+        setIsAwaitingPayment(false);
+      }
+      return;
+    }
+
+    // 現金結帳直接送出
+    finalizeOrder();
+  };
+
 
 
   const updateOrderStatus = async (id: string, status: string) => {
@@ -1035,6 +1125,29 @@ export default function App() {
                   </div>
                 </div>
 
+                
+                {paymentMethod === 'mobile' && (
+                  <div className="bg-blue-50 border border-blue-200 p-4 rounded-md">
+                    <label className="block text-sm font-bold text-blue-800 mb-2">請使用實體掃碼槍掃描客人條碼</label>
+                    <input 
+                      type="text" 
+                      autoFocus
+                      value={mobileBarcode} 
+                      onChange={e => setMobileBarcode(e.target.value)} 
+                      placeholder="掃描 LINE Pay / 街口 / 台灣Pay 條碼..." 
+                      className="w-full border border-blue-300 px-3 py-2.5 rounded-md font-mono text-lg focus:border-blue-500 focus:ring-2 ring-blue-200 focus:outline-none" 
+                    />
+                    <p className="text-xs text-blue-600 mt-2">提示：游標停在此處時，直接按下實體條碼槍的按鈕即可。</p>
+                  </div>
+                )}
+                {paymentMethod === 'credit' && (
+                  <div className="bg-gray-100 border border-gray-300 p-6 rounded-md flex flex-col items-center justify-center space-y-3">
+                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center animate-pulse">
+                      <CheckCircle className="text-gray-400" />
+                    </div>
+                    <p className="text-sm font-bold text-gray-600 text-center">準備連線實體刷卡機 (EDC)<br/><span className="text-xs font-normal">請確認設備已透過 USB 或 COM Port 連接至本電腦</span></p>
+                  </div>
+                )}
                 {paymentMethod === 'cash' && (
                   <div className="flex gap-4">
                     <div className="flex-1">
@@ -1057,8 +1170,13 @@ export default function App() {
               </div>
               <div className="p-4 bg-gray-50 border-t border-[#e9e9e7] flex gap-3">
                 <button onClick={() => setShowCheckoutModal(false)} className="flex-1 py-3 bg-white border border-[#e9e9e7] text-gray-600 font-bold rounded-md hover:bg-gray-100">取消</button>
-                <button onClick={submitCheckout} disabled={paymentMethod === 'cash' && (Number(tenderedAmount) || 0) < cartTotal} className="flex-[2] py-3 bg-[#37352f] text-white font-bold rounded-md hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
-                  確認收款並列印
+                <button onClick={submitCheckout} disabled={isAwaitingPayment || (paymentMethod === 'cash' && (Number(tenderedAmount) || 0) < cartTotal)} className="flex-[2] py-3 bg-[#37352f] text-white font-bold rounded-md hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed shadow-md transition-all">
+                  {isAwaitingPayment ? (
+                    <div className="flex items-center justify-center">
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+                      {paymentStatusMsg || '硬體同步中...'}
+                    </div>
+                  ) : '確認收款並連線設備'}
                 </button>
               </div>
             </div>
