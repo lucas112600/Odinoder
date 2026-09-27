@@ -11,6 +11,20 @@ export class OrdersService {
   ) {}
 
   async create(data: Prisma.OrderCreateInput) {
+    
+    // Find or create active shift
+    const tenantId = (data.tenant.connect as any).id;
+    let shift = await this.prisma.shift.findFirst({
+      where: { tenantId, endTime: null },
+      orderBy: { startTime: 'desc' }
+    });
+    if (!shift) {
+      shift = await this.prisma.shift.create({
+        data: { tenant: { connect: { id: tenantId } } }
+      });
+    }
+    data.shift = { connect: { id: shift.id } };
+
     const order = await this.prisma.order.create({
       data,
       // 確保回傳時包含明細，以及明細關聯的商品資料 (給 POS 顯示名稱用)

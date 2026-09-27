@@ -35,6 +35,7 @@ export default function App() {
 
   const [orders, setOrders] = useState<any[]>([]);
   const [showEODModal, setShowEODModal] = useState(false);
+  const [shiftData, setShiftData] = useState<any>({ total: 0, orderCount: 0 });
   const [printOrder, setPrintOrder] = useState<any>(null);
 
   // 取得可登入的門市列表
@@ -177,10 +178,32 @@ export default function App() {
   const eodCount = todayOrders.filter(o => o.status === '已完成').length;
   const eodPending = todayOrders.filter(o => o.status !== '已完成').length;
 
-  const handleCloseRegister = () => {
-    alert('結算報表已發送至出單機。系統即將登出。');
-    setShowEODModal(false);
+  
+  const openShiftModal = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/tenants/${tenantId}/active-shift`);
+      if (res.ok) {
+        setShiftData(await res.json());
+      }
+    } catch(e) {}
+    setShowEODModal(true);
   };
+
+  const handleCloseRegister = async () => {
+    if (!window.confirm('確定要結算當前班表並重新計算下一班嗎？此操作無法還原。')) return;
+    try {
+      await fetch(`${API_BASE}/tenants/${tenantId}/close-shift`, { method: 'POST' });
+      alert('結班報表已產生！系統即將登出。');
+      localStorage.removeItem('pos_tenantId');
+      localStorage.removeItem('pos_tenantName');
+      setTenantId(null);
+      setTenantName(null);
+      setShowEODModal(false);
+    } catch(e) {
+      alert('結班失敗');
+    }
+  };
+
 
   const activeOrders = orders.filter(o => o.status !== '已完成' && o.status !== '已作廢');
 
@@ -296,7 +319,7 @@ export default function App() {
           </button>
         </div>
         <div className="w-full">
-          <button onClick={() => setShowEODModal(true)} className="flex flex-col items-center text-[#9a9a97] border-l-4 border-transparent hover:text-white hover:bg-white py-3 w-full transition">
+          <button onClick={openShiftModal} className="flex flex-col items-center text-[#9a9a97] border-l-4 border-transparent hover:text-white hover:bg-white py-3 w-full transition">
             <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
             <span className="text-[10px] font-bold tracking-wider">關班結算</span>
           </button>

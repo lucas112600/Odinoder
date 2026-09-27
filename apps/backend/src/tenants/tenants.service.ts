@@ -24,6 +24,48 @@ export class TenantsService {
     });
   }
 
+  
+  async closeShift(tenantId: string) {
+    const shift = await this.prisma.shift.findFirst({
+      where: { tenantId, endTime: null },
+      orderBy: { startTime: 'desc' }
+    });
+
+    if (!shift) {
+      throw new Error('No active shift found');
+    }
+
+    const orders = await this.prisma.order.findMany({
+      where: { shiftId: shift.id, status: 'COMPLETED' }
+    });
+
+    const totalAmount = orders.reduce((sum, order) => sum + Number(order.totalAmount), 0);
+
+    return this.prisma.shift.update({
+      where: { id: shift.id },
+      data: {
+        endTime: new Date(),
+        totalAmount
+      }
+    });
+  }
+
+  async getActiveShiftTotal(tenantId: string) {
+    const shift = await this.prisma.shift.findFirst({
+      where: { tenantId, endTime: null },
+      orderBy: { startTime: 'desc' }
+    });
+
+    if (!shift) return { total: 0, orderCount: 0 };
+
+    const orders = await this.prisma.order.findMany({
+      where: { shiftId: shift.id, status: 'COMPLETED' }
+    });
+
+    const total = orders.reduce((sum, order) => sum + Number(order.totalAmount), 0);
+    return { total, orderCount: orders.length, startTime: shift.startTime };
+  }
+
   async update(id: string, data: { name?: string, isActive?: boolean, tables?: string[] }) {
     return this.prisma.tenant.update({
       where: { id },
