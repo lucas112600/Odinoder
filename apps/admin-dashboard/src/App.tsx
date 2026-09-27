@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 const rawApiUrl = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
 const API_BASE = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
 import React, { useState, useEffect, useRef } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+
 
 export default function App() {
   const [tenantId, setTenantId] = useState<string | null>(localStorage.getItem('admin_tenantId'));
@@ -149,52 +149,6 @@ export default function App() {
     }
     setScanBarcode('');
   };
-const updateOrderStatus = async (id: string, status: string) => {
-    try {
-      await fetch(`${API_BASE}/orders/${id}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
-      });
-    } catch(e) {}
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('admin_tenantId');
-    localStorage.removeItem('admin_tenantName');
-    setTenantId(null);
-  };
-
-  // 原本抓取資料的邏輯改依賴 tenantId
-  useEffect(() => {
-    if (!tenantId) return;
-    const fetchTenantDetails = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/tenants/${tenantId}`);
-        const data = await res.json();
-        if (data.tables && data.tables.length > 0) {
-          setTables(data.tables);
-        } else {
-          // If empty, sync default
-          const defaultTables = ['1', '2', '3'];
-          setTables(defaultTables);
-          fetch(`${API_BASE}/tenants/${tenantId}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tables: defaultTables })
-          });
-        }
-      } catch (e) {}
-    };
-    fetchTenantDetails();
-
-    const fetchProducts = async () => {
-      const res = await fetch(`${API_BASE}/products/tenant/${tenantId}`);
-      setProducts(await res.json());
-    };
-    
-
-  
   const addToCart = (product: any) => {
     setCart(prev => {
       const existing = prev.find(item => item.product.id === product.id);
@@ -240,6 +194,54 @@ const updateOrderStatus = async (id: string, status: string) => {
       }
     } catch(e) {}
   };
+
+  const updateOrderStatus = async (id: string, status: string) => {
+    try {
+      await fetch(`${API_BASE}/orders/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+    } catch(e) {}
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin_tenantId');
+    localStorage.removeItem('admin_tenantName');
+    setTenantId(null);
+  };
+
+  // 原本抓取資料的邏輯改依賴 tenantId
+  useEffect(() => {
+    if (!tenantId) return;
+    const fetchTenantDetails = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/tenants/${tenantId}`);
+        const data = await res.json();
+        if (data.tables && data.tables.length > 0) {
+          setTables(data.tables);
+        } else {
+          // If empty, sync default
+          const defaultTables = ['1', '2', '3'];
+          setTables(defaultTables);
+          fetch(`${API_BASE}/tenants/${tenantId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tables: defaultTables })
+          });
+        }
+      } catch (e) {}
+    };
+    fetchTenantDetails();
+
+    const fetchProducts = async () => {
+      const res = await fetch(`${API_BASE}/products/tenant/${tenantId}`);
+      setProducts(await res.json());
+    };
+    
+
+  
+
 
   const fetchOrders = async () => {
     try {
