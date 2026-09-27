@@ -178,7 +178,7 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           tenantId,
-          table: walkInTable,
+          tableNumber: walkInTable, orderType: 'POS',
           totalAmount: cartTotal,
           items: cart.map(item => ({
             productId: item.product.id,
@@ -623,7 +623,7 @@ export default function App() {
                         <div key={order.id} className="bg-white p-4 rounded-md shadow-sm border border-[#e9e9e7]">
                           <div className="flex justify-between items-start mb-2">
                             <span className="font-black text-lg text-[#37352f]">{order.id.split('-')[0].toUpperCase()}</span>
-                            <span className="text-xs font-bold bg-yellow-100 text-yellow-800 px-2 py-1 rounded">{order.table}</span>
+                            <span className="text-xs font-bold bg-yellow-100 text-yellow-800 px-2 py-1 rounded">{order.tableNumber || (order.orderType === "DINE_IN" ? "內用" : (order.orderType === "TAKEOUT" ? "外帶" : order.orderType)) || "外帶"}</span>
                           </div>
                           <div className="text-sm text-[#37352f] mb-4 space-y-1">
                             {order.items?.map((item: any) => (
@@ -648,7 +648,7 @@ export default function App() {
                         <div key={order.id} className="bg-white p-4 rounded-md shadow-sm border border-[#e9e9e7]">
                           <div className="flex justify-between items-start mb-2">
                             <span className="font-black text-lg text-[#37352f]">{order.id.split('-')[0].toUpperCase()}</span>
-                            <span className="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-1 rounded">{order.table}</span>
+                            <span className="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-1 rounded">{order.tableNumber || (order.orderType === "DINE_IN" ? "內用" : (order.orderType === "TAKEOUT" ? "外帶" : order.orderType)) || "外帶"}</span>
                           </div>
                           <div className="text-sm text-[#37352f] mb-4 space-y-1">
                             {order.items?.map((item: any) => (
@@ -676,7 +676,7 @@ export default function App() {
                         <div key={order.id} className="bg-white p-4 rounded-md shadow-sm border border-[#e9e9e7] opacity-60">
                           <div className="flex justify-between items-start mb-2">
                             <span className="font-black text-lg text-[#37352f]">{order.id.split('-')[0].toUpperCase()}</span>
-                            <span className="text-xs font-bold bg-green-100 text-green-800 px-2 py-1 rounded">{order.table}</span>
+                            <span className="text-xs font-bold bg-green-100 text-green-800 px-2 py-1 rounded">{order.tableNumber || (order.orderType === "DINE_IN" ? "內用" : (order.orderType === "TAKEOUT" ? "外帶" : order.orderType)) || "外帶"}</span>
                           </div>
                           <div className="flex justify-between items-center pt-2">
                             <span className="font-bold text-sm">NT$ {order.totalAmount}</span>
