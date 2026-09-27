@@ -193,30 +193,42 @@ export default function App() {
 
   const cartTotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
-  const handlePOSCheckout = async () => {
+  
+  const handlePOSCheckout = () => {
     if (cart.length === 0) return;
+    setTenderedAmount(cartTotal);
+    setPaymentMethod('cash');
+    setTaxId('');
+    setShowCheckoutModal(true);
+  };
+
+  const submitCheckout = async () => {
     try {
       const res = await fetch(`${API_BASE}/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           tenantId,
-          tableNumber: walkInTable, orderType: 'POS',
+          tableNumber: walkInTable,
+          orderType: 'POS',
           totalAmount: cartTotal,
+          status: 'PENDING',
           items: cart.map(item => ({
             productId: item.product.id,
             quantity: item.quantity,
-            price: item.product.price
+            subtotal: Number(item.product.price) * item.quantity
           }))
         })
       });
       if(res.ok) {
         setCart([]);
-        alert('結帳成功！訂單已送至廚房看板。');
-        setActiveTab('orders'); // 切換回看板看單
+        setShowCheckoutModal(false);
+        alert('結帳成功！收據已列印，訂單已送至廚房看板。');
+        setActiveTab('orders');
       }
     } catch(e) {}
   };
+
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
