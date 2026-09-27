@@ -356,10 +356,10 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-blue-200 mb-8 bg-[#f7f6f3]/30">
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7] mb-8 bg-[#f7f6f3]/30">
                   <h4 className="font-bold text-[#37352f] mb-4 flex items-center"><QrCode size={18} className="mr-2"/> 條碼快速進貨 (Barcode Scanner)</h4>
                   <form onSubmit={handleScanSubmit} className="flex space-x-3">
-                    <input type="text" value={scanBarcode} onChange={e => setScanBarcode(e.target.value)} placeholder="請將游標停在此處，並使用條碼掃描槍刷入..." className="flex-1 border border-blue-200 px-4 py-3 rounded-md font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none shadow-inner" autoFocus />
+                    <input type="text" value={scanBarcode} onChange={e => setScanBarcode(e.target.value)} placeholder="請將游標停在此處，並使用條碼掃描槍刷入..." className="flex-1 border border-[#e9e9e7] px-4 py-3 rounded-md font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none shadow-inner" autoFocus />
                     <button type="submit" className="bg-blue-600 text-[#37352f] px-6 py-3 rounded-md font-bold shadow-md hover:bg-[#2f2e2a] active:scale-95">送出條碼</button>
                   </form>
                 </div>
@@ -510,7 +510,7 @@ export default function App() {
                         <td className="py-3 px-6 text-xs text-gray-400 font-mono">{p.id.split('-')[0].toUpperCase()}</td>
                         <td className="py-3 px-6 font-black text-[#37352f] text-right">NT$ {p.price}</td>
                         <td className="py-3 px-6 text-center">
-                          <button onClick={() => setEditingProduct(p)} className="text-[#37352f] hover:text-[#37352f] bg-[#f7f6f3] hover:bg-blue-100 px-4 py-1.5 rounded-lg text-xs font-bold transition">
+                          <button onClick={() => setEditingProduct(p)} className="text-[#37352f] hover:text-[#37352f] bg-[#f7f6f3] hover:bg-[#e9e9e7] px-4 py-1.5 rounded-lg text-xs font-bold transition">
                             編輯
                           </button>
                         </td>
@@ -586,7 +586,7 @@ export default function App() {
                           <td className="py-4 px-6 font-mono text-sm font-bold text-gray-700">#{o.id.split('-')[0].toUpperCase()}</td>
                           <td className="py-4 px-6 text-sm text-[#9a9a97] font-medium">{new Date(o.createdAt).toLocaleString()}</td>
                           <td className="py-4 px-6">
-                            <span className={`px-3 py-1 rounded-full font-bold text-xs ${o.status === 'COMPLETED' ? 'bg-green-100 text-green-700 border border-green-200' : o.status === 'PREPARING' ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-orange-100 text-orange-700 border border-orange-200'}`}>
+                            <span className={`px-3 py-1 rounded-full font-bold text-xs ${o.status === 'COMPLETED' ? 'bg-green-100 text-green-700 border border-green-200' : o.status === 'PREPARING' ? 'bg-[#e9e9e7] text-blue-700 border border-[#e9e9e7]' : 'bg-orange-100 text-orange-700 border border-orange-200'}`}>
                               {o.status === 'COMPLETED' ? '已完成' : o.status === 'PREPARING' ? '準備中' : '等待接單'}
                             </span>
                           </td>
