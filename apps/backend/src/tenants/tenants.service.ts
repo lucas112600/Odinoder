@@ -14,13 +14,17 @@ export class TenantsService {
     });
   }
 
+  async findOne(id: string) {
+    return this.prisma.tenant.findUnique({ where: { id } });
+  }
+
   async findAll() {
     return this.prisma.tenant.findMany({
       orderBy: { createdAt: 'desc' }
     });
   }
 
-  async update(id: string, data: { name?: string, isActive?: boolean }) {
+  async update(id: string, data: { name?: string, isActive?: boolean, tables?: string[] }) {
     return this.prisma.tenant.update({
       where: { id },
       data

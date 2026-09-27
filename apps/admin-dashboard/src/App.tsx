@@ -16,7 +16,7 @@ export default function App() {
   const [rawMaterials, setRawMaterials] = useState<any[]>([]);
   const [newMaterial, setNewMaterial] = useState({ name: '', stock: '', unit: 'g', safetyStock: '10' });
   const [editingProduct, setEditingProduct] = useState<any>(null);
-  const [tables, setTables] = useState<string[]>(['1', '2', '3', '4', '5']);
+  const [tables, setTables] = useState<string[]>([]);
   const [newTable, setNewTable] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -130,6 +130,26 @@ export default function App() {
   // 原本抓取資料的邏輯改依賴 tenantId
   useEffect(() => {
     if (!tenantId) return;
+    const fetchTenantDetails = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/tenants/${tenantId}`);
+        const data = await res.json();
+        if (data.tables && data.tables.length > 0) {
+          setTables(data.tables);
+        } else {
+          // If empty, sync default
+          const defaultTables = ['1', '2', '3'];
+          setTables(defaultTables);
+          fetch(`${API_BASE}/tenants/${tenantId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tables: defaultTables })
+          });
+        }
+      } catch (e) {}
+    };
+    fetchTenantDetails();
+
     const fetchProducts = async () => {
       const res = await fetch(`${API_BASE}/products/tenant/${tenantId}`);
       setProducts(await res.json());
@@ -570,7 +590,19 @@ export default function App() {
                   <p className="text-sm text-gray-500 mt-1">大量產生專屬桌號條碼，供門市列印與佈置</p>
                 </div>
                 <div className="flex space-x-3">
-                  <form onSubmit={(e) => { e.preventDefault(); if(newTable) { setTables([...tables, newTable]); setNewTable(''); } }} className="flex">
+                  <form onSubmit={async (e) => { 
+                      e.preventDefault(); 
+                      if(newTable) { 
+                        const nt = [...tables, newTable];
+                        setTables(nt); 
+                        setNewTable(''); 
+                        await fetch(`${API_BASE}/tenants/${tenantId}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ tables: nt })
+                        });
+                      } 
+                    }} className="flex">
                     <input type="text" placeholder="新增桌號..." value={newTable} onChange={e => setNewTable(e.target.value)} className="border border-gray-200 px-3 py-2 rounded-l-xl text-sm focus:outline-none focus:border-blue-500 w-32" />
                     <button type="submit" className="bg-gray-100 px-4 py-2 text-sm font-bold border border-l-0 border-gray-200 rounded-r-xl hover:bg-gray-200">新增</button>
                   </form>
@@ -592,7 +624,15 @@ export default function App() {
                     <p className="text-xs text-gray-400 mt-4 text-center break-all px-2 print:text-[10px] print:text-black">
                       掃描此條碼開始點餐
                     </p>
-                    <button onClick={() => setTables(tables.filter(t => t !== table))} className="mt-4 text-xs text-red-500 font-bold hover:underline print:hidden">
+                    <button onClick={async () => {
+                        const nt = tables.filter(t => t !== table);
+                        setTables(nt);
+                        await fetch(`${API_BASE}/tenants/${tenantId}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ tables: nt })
+                        });
+                      }} className="mt-4 text-xs text-red-500 font-bold hover:underline print:hidden">
                       移除此桌號
                     </button>
                   </div>

@@ -10,13 +10,18 @@ export class TenantsController {
     return this.tenantsService.create(data);
   }
 
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.tenantsService.findOne(id);
+  }
+
   @Get()
   findAll() {
     return this.tenantsService.findAll();
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: { name?: string, isActive?: boolean }) {
+  update(@Param('id') id: string, @Body() data: { name?: string, isActive?: boolean, tables?: string[] }) {
     return this.tenantsService.update(id, data);
   }
 

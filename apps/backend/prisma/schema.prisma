@@ -13,6 +13,7 @@ model Tenant {
   subscriptionPlan String      @map("subscription_plan")
   isActive         Boolean     @default(true) @map("is_active")
   createdAt        DateTime    @default(now()) @map("created_at")
+  tables           String[]    @default(["1", "2", "3"])
 
   products         Product[]
   orders           Order[]
