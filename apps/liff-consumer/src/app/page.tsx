@@ -23,6 +23,7 @@ function OrderingContent() {
   
   const [products, setProducts] = useState<any[]>([]);
   const [tenantName, setTenantName] = useState<string>('');
+  const [tenant, setTenant] = useState<any>(null);
   const [activeCategory, setActiveCategory] = useState<string>('全部');
   const [cart, setCart] = useState<CartItem[]>([]);
   
@@ -40,7 +41,7 @@ function OrderingContent() {
     if (!tenantId) return;
     fetch(`${API_BASE}/tenants/${tenantId}`)
       .then(res => res.json())
-      .then(data => setTenantName(data.name || ''))
+      .then(data => { setTenantName(data.name || ''); setTenant(data); })
       .catch(e => console.error(e));
 
     fetch(`${API_BASE}/products/tenant/${tenantId}`)
@@ -128,7 +129,7 @@ function OrderingContent() {
     }
   };
 
-  const presetTags = ['少冰', '去冰', '熱', '無糖', '微糖', '半糖', '加辣', '不加蔥', '不加香菜'];
+  const presetTags = tenant?.presetTags || ['少冰', '去冰', '熱', '無糖', '微糖', '半糖', '加辣', '不加蔥', '不加香菜'];
 
   if (!tenantId) {
     return <div className="p-8 text-center mt-20"><h1 className="text-2xl font-bold mb-4">歡迎光臨</h1><p>請掃描桌面 QR Code 進行點餐</p></div>;
@@ -280,7 +281,7 @@ function OrderingContent() {
               <div className="mb-6">
                 <h4 className="font-bold text-[#37352f] mb-3 flex items-center"><MessageSquare size={16} className="mr-2" /> 快速口味與喜好</h4>
                 <div className="flex flex-wrap gap-2">
-                  {presetTags.map(tag => (
+                  {presetTags.map((tag: string) => (
                     <button key={tag} onClick={() => toggleTag(tag)} className={`px-4 py-2 border rounded-md font-bold text-sm transition ${customTags.includes(tag) ? 'bg-[#f7f6f3] border-blue-600 text-blue-700' : 'bg-white border-[#e9e9e7] text-gray-600'}`}>
                       {tag}
                     </button>
