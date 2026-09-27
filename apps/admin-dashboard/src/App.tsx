@@ -279,8 +279,9 @@ export default function App() {
         <div className="px-4 mb-4 mt-auto">
           <button 
             onClick={() => {
-              navigator.clipboard.writeText(`http://localhost:3001/${tenantId}`);
-              alert('已複製消費者專屬點餐網址！\n\n' + `http://localhost:3001/${tenantId}`);
+              const consumerUrl = (import.meta.env.VITE_CONSUMER_URL || 'http://localhost:3001') + `/?store=${tenantId}`;
+              navigator.clipboard.writeText(consumerUrl);
+              alert('已複製消費者專屬點餐網址！\n\n' + consumerUrl);
             }}
             className="w-full flex items-center justify-center px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 transition shadow-sm border border-indigo-100 active:scale-95 text-sm">
             🔗 複製專屬點餐網址
