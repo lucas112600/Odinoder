@@ -185,25 +185,25 @@ export default function App() {
 
   if (!tenantId) {
     return (
-      <div className="flex h-screen items-center justify-center bg-slate-900 font-sans text-slate-800">
-        <div className="bg-white p-10 rounded-xl shadow-2xl w-full max-w-md mx-4">
+      <div className="flex h-screen items-center justify-center bg-[#f7f6f3] font-sans text-[#37352f]">
+        <div className="bg-white p-10 rounded-md shadow-2xl w-full max-w-md mx-4">
           <div className="flex flex-col items-center mb-8">
-            <img src="/logo.png" alt="System Logo" className="w-20 h-20 mb-4 rounded-xl shadow-md" />
-            <h1 className="text-2xl font-bold text-slate-900">KDS 前台設備綁定</h1>
-            <p className="text-sm text-slate-500 mt-2">請選擇此設備要連線的實體門市</p>
+            <img src="/logo.png" alt="System Logo" className="w-20 h-20 mb-4 rounded-md shadow-md" />
+            <h1 className="text-2xl font-bold text-[#37352f]">KDS 前台設備綁定</h1>
+            <p className="text-sm text-[#9a9a97] mt-2">請選擇此設備要連線的實體門市</p>
           </div>
           <div className="space-y-3">
             {availableStores.length === 0 ? (
-              <div className="text-center py-6 text-slate-400 font-medium">目前無可用的門市，請先至總管理後台建立。</div>
+              <div className="text-center py-6 text-[#9a9a97] font-medium">目前無可用的門市，請先至總管理後台建立。</div>
             ) : availableStores.map(store => (
               <button key={store.id} onClick={() => {
                 localStorage.setItem('pos_tenantId', store.id);
                 localStorage.setItem('pos_tenantName', store.name);
                 setTenantId(store.id);
                 setTenantName(store.name);
-              }} className="w-full flex items-center justify-between px-6 py-4 border border-slate-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition group">
-                <span className="font-bold text-slate-800 group-hover:text-blue-800">{store.name}</span>
-                <span className="text-blue-600 opacity-0 group-hover:opacity-100 font-bold transition">連線 →</span>
+              }} className="w-full flex items-center justify-between px-6 py-4 border border-[#e9e9e7] rounded-lg hover:border-[#37352f] hover:bg-[#f7f6f3] transition group">
+                <span className="font-bold text-[#37352f] group-hover:text-[#37352f]">{store.name}</span>
+                <span className="text-[#37352f] opacity-0 group-hover:opacity-100 font-bold transition">連線 →</span>
               </button>
             ))}
           </div>
@@ -250,26 +250,26 @@ export default function App() {
       )}
 
       {/* 正常畫面 - 列印時隱藏 */}
-      <div className="flex h-screen bg-[#eceff1] font-sans text-slate-800 print:hidden">
+      <div className="flex h-screen bg-[#f7f6f3] font-sans text-[#37352f] print:hidden">
       {/* 日結報表 Modal */}
       {showEODModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4 border border-slate-200">
-            <div className="border-b border-slate-200 pb-4 mb-6">
-              <h2 className="text-xl font-bold text-slate-800 text-center">門市日結報表 (Z-Report)</h2>
+        <div className="fixed inset-0 bg-[#f7f6f3]/60 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4 border border-[#e9e9e7]">
+            <div className="border-b border-[#e9e9e7] pb-4 mb-6">
+              <h2 className="text-xl font-bold text-[#37352f] text-center">門市日結報表 (Z-Report)</h2>
             </div>
             <div className="space-y-4 mb-8">
-              <div className="flex justify-between items-center text-sm border-b border-slate-100 pb-2">
-                <span className="text-slate-500 font-medium">結算日期</span>
-                <span className="font-bold text-slate-800">{new Date().toLocaleDateString('zh-TW')}</span>
+              <div className="flex justify-between items-center text-sm border-b border-[#e9e9e7] pb-2">
+                <span className="text-[#9a9a97] font-medium">結算日期</span>
+                <span className="font-bold text-[#37352f]">{new Date().toLocaleDateString('zh-TW')}</span>
               </div>
-              <div className="flex justify-between items-center text-sm border-b border-slate-100 pb-2">
-                <span className="text-slate-500 font-medium">總出餐筆數</span>
-                <span className="font-bold text-slate-800">{eodCount} 筆</span>
+              <div className="flex justify-between items-center text-sm border-b border-[#e9e9e7] pb-2">
+                <span className="text-[#9a9a97] font-medium">總出餐筆數</span>
+                <span className="font-bold text-[#37352f]">{eodCount} 筆</span>
               </div>
-              <div className="flex justify-between items-center bg-slate-50 p-4 rounded border border-slate-200 mt-4">
+              <div className="flex justify-between items-center bg-slate-50 p-4 rounded border border-[#e9e9e7] mt-4">
                 <span className="font-bold text-slate-700">實收總計</span>
-                <span className="font-bold text-2xl text-slate-900">NT$ {eodRevenue}</span>
+                <span className="font-bold text-2xl text-[#37352f]">NT$ {eodRevenue}</span>
               </div>
               {eodPending > 0 && (
                 <div className="bg-red-50 p-3 rounded border border-red-200 text-red-600 font-medium text-sm text-center">
@@ -279,23 +279,23 @@ export default function App() {
             </div>
             <div className="flex space-x-3">
               <button onClick={() => setShowEODModal(false)} className="flex-1 py-2.5 bg-white border border-slate-300 text-slate-700 font-bold rounded hover:bg-slate-50 transition">返回</button>
-              <button onClick={handleCloseRegister} className="flex-1 py-2.5 bg-slate-800 text-white font-bold rounded hover:bg-slate-900 transition">列印並關班</button>
+              <button onClick={handleCloseRegister} className="flex-1 py-2.5 bg-white text-white font-bold rounded hover:bg-[#f7f6f3] transition">列印並關班</button>
             </div>
           </div>
         </div>
       )}
 
       {/* 左側 Sidebar (深色系商用風格) */}
-      <div className="w-20 bg-slate-900 text-slate-300 flex flex-col items-center py-4 shadow-lg z-10 justify-between">
+      <div className="w-20 bg-[#f7f6f3] text-slate-300 flex flex-col items-center py-4 shadow-lg z-10 justify-between">
         <div className="flex flex-col items-center space-y-6 w-full">
           <img src="/logo.png" alt="System Logo" className="w-12 h-12 mb-4 rounded-md shadow-sm" />
-          <button className="flex flex-col items-center text-white border-l-4 border-blue-500 py-3 w-full bg-slate-800">
+          <button className="flex flex-col items-center text-white border-l-4 border-blue-500 py-3 w-full bg-white">
             <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
             <span className="text-[10px] font-bold tracking-wider">接單看板</span>
           </button>
         </div>
         <div className="w-full">
-          <button onClick={() => setShowEODModal(true)} className="flex flex-col items-center text-slate-400 border-l-4 border-transparent hover:text-white hover:bg-slate-800 py-3 w-full transition">
+          <button onClick={() => setShowEODModal(true)} className="flex flex-col items-center text-[#9a9a97] border-l-4 border-transparent hover:text-white hover:bg-white py-3 w-full transition">
             <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
             <span className="text-[10px] font-bold tracking-wider">關班結算</span>
           </button>
@@ -304,10 +304,10 @@ export default function App() {
 
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Header */}
-        <header className="h-16 bg-white shadow-sm flex items-center justify-between px-6 shrink-0 border-b border-slate-200 z-10">
+        <header className="h-16 bg-white shadow-sm flex items-center justify-between px-6 shrink-0 border-b border-[#e9e9e7] z-10">
           <div className="flex items-center">
-            <h1 className="text-lg font-bold text-slate-800">門市前台接單系統</h1>
-            <span className="ml-3 px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded text-xs font-bold tracking-wider">KDS</span>
+            <h1 className="text-lg font-bold text-[#37352f]">門市前台接單系統</h1>
+            <span className="ml-3 px-2 py-0.5 bg-slate-100 text-[#9a9a97] border border-[#e9e9e7] rounded text-xs font-bold tracking-wider">KDS</span>
           </div>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
@@ -318,34 +318,34 @@ export default function App() {
               <span className="text-slate-600 text-xs font-medium">系統連線中</span>
             </div>
             <div className="h-4 w-px bg-slate-300"></div>
-            <span className="text-slate-800 font-bold text-sm">{tenantName || '未命名門市'}</span>
-            <button onClick={handleConnectPrinter} className="text-xs text-blue-600 bg-blue-50 px-3 py-1 rounded font-bold ml-4 border border-blue-200 shadow-sm hover:bg-blue-100 transition">🔌 連接硬體印表機</button>
-            <button onClick={handleLogout} className="text-xs text-slate-500 hover:text-slate-800 font-bold ml-4 underline">切換門市</button>
+            <span className="text-[#37352f] font-bold text-sm">{tenantName || '未命名門市'}</span>
+            <button onClick={handleConnectPrinter} className="text-xs text-[#37352f] bg-[#f7f6f3] px-3 py-1 rounded font-bold ml-4 border border-blue-200 shadow-sm hover:bg-blue-100 transition">🔌 連接硬體印表機</button>
+            <button onClick={handleLogout} className="text-xs text-[#9a9a97] hover:text-[#37352f] font-bold ml-4 underline">切換門市</button>
           </div>
         </header>
 
         {/* 接單主畫面 (扁平化設計) */}
         <div className="flex-1 overflow-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-start bg-slate-50">
           {activeOrders.length === 0 ? (
-            <div className="col-span-full flex flex-col items-center justify-center h-full min-h-[400px] text-slate-400">
+            <div className="col-span-full flex flex-col items-center justify-center h-full min-h-[400px] text-[#9a9a97]">
               <svg className="w-16 h-16 mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               <p className="text-lg font-medium">目前無待處理訂單</p>
             </div>
           ) : null}
 
           {activeOrders.map((order) => (
-            <div key={order.id} className="bg-white rounded shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-              <div className={`px-4 py-3 border-b flex justify-between items-center ${order.status === '等待接單' ? 'bg-orange-50 border-orange-100' : 'bg-blue-50 border-blue-100'}`}>
+            <div key={order.id} className="bg-white rounded shadow-sm border border-[#e9e9e7] overflow-hidden flex flex-col">
+              <div className={`px-4 py-3 border-b flex justify-between items-center ${order.status === '等待接單' ? 'bg-orange-50 border-orange-100' : 'bg-[#f7f6f3] border-blue-100'}`}>
                 <div>
-                  <span className="text-xs font-medium text-slate-500">#{order.displayId}</span>
-                  <h2 className="text-xl font-bold text-slate-900 mt-0.5">
+                  <span className="text-xs font-medium text-[#9a9a97]">#{order.displayId}</span>
+                  <h2 className="text-xl font-bold text-[#37352f] mt-0.5">
                     {order.table === '外帶' ? '外帶自取' : `內用 - 桌號 ${order.table}`}
                   </h2>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs font-bold text-slate-500">{order.time}</p>
+                  <p className="text-xs font-bold text-[#9a9a97]">{order.time}</p>
                    <div className="flex items-center space-x-2 mt-1 justify-end">
-                    <button onClick={() => handlePrint(order)} className="p-1 text-slate-400 hover:text-blue-600 transition" title="列印明細">
+                    <button onClick={() => handlePrint(order)} className="p-1 text-[#9a9a97] hover:text-[#37352f] transition" title="列印明細">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
                     </button>
                     <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-bold tracking-wide border ${order.status === '等待接單' ? 'bg-orange-100 text-orange-700 border-orange-200' : 'bg-blue-100 text-blue-700 border-blue-200'}`}>
@@ -356,11 +356,11 @@ export default function App() {
               </div>
               
               <div className="p-4 flex-1 bg-white min-h-[140px]">
-                <p className="text-slate-800 font-medium leading-relaxed whitespace-pre-line text-sm">{order.items}</p>
+                <p className="text-[#37352f] font-medium leading-relaxed whitespace-pre-line text-sm">{order.items}</p>
               </div>
               
-              <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50">
-                <p className="font-bold text-lg text-slate-800">${order.total}</p>
+              <div className="p-4 border-t border-[#e9e9e7] flex items-center justify-between bg-slate-50">
+                <p className="font-bold text-lg text-[#37352f]">${order.total}</p>
                 <div className="flex space-x-2">
                   {order.status === '等待接單' && (
                     <button onClick={() => handleVoid(order.id)} className="px-3 py-2 rounded text-sm font-bold bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 transition-colors">
@@ -369,7 +369,7 @@ export default function App() {
                   )}
                   <button 
                     onClick={() => handleAction(order.id, order.status)}
-                    className={`px-5 py-2 rounded text-sm font-bold transition-colors ${order.status === '等待接單' ? 'bg-orange-600 text-white hover:bg-orange-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>
+                    className={`px-5 py-2 rounded text-sm font-bold transition-colors ${order.status === '等待接單' ? 'bg-orange-600 text-white hover:bg-orange-700' : 'bg-[#37352f] text-white hover:bg-[#2f2e2a]'}`}>
                     {order.status === '等待接單' ? '接收訂單' : '標示出餐'}
                   </button>
                 </div>

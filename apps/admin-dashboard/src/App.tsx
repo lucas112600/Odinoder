@@ -192,23 +192,23 @@ export default function App() {
 
   if (!tenantId) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 font-sans text-slate-800">
-        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl flex overflow-hidden min-h-[500px]">
-          <div className="w-1/2 bg-slate-800 text-white p-12 flex flex-col justify-center">
+      <div className="min-h-screen bg-[#f7f6f3] flex items-center justify-center p-4 font-sans text-slate-800">
+        <div className="bg-white border border-[#e9e9e7] rounded-lg shadow-sm w-full max-w-4xl flex overflow-hidden min-h-[500px]">
+          <div className="w-1/2 bg-[#f7f6f3] text-[#37352f] p-12 border-r border-[#e9e9e7] flex flex-col justify-center">
             <h1 className="text-4xl font-black mb-4">營運總部 總營運管理</h1>
-            <p className="text-slate-300 leading-relaxed font-medium">歡迎回到雲端 SaaS 門市管理系統。請在右側選擇您要管理的門市，或是建立全新的餐飲品牌據點。</p>
+            <p className="text-[#787774] leading-relaxed font-medium">歡迎回到雲端 SaaS 門市管理系統。請在右側選擇您要管理的門市，或是建立全新的餐飲品牌據點。</p>
           </div>
           <div className="w-1/2 p-12 flex flex-col h-[500px] overflow-auto">
-            <h2 className="text-2xl font-black text-gray-900 mb-6">選擇門市登入</h2>
+            <h2 className="text-2xl font-black text-[#37352f] mb-6">選擇門市登入</h2>
             <div className="space-y-3 flex-1">
               {availableStores.length === 0 ? <p className="text-sm text-gray-400">目前尚無任何門市資料</p> : availableStores.map(store => (
-                <div key={store.id} className="w-full flex items-center justify-between px-5 py-4 border border-gray-200 rounded-2xl hover:border-blue-500 hover:bg-blue-50 transition group">
+                <div key={store.id} className="w-full flex items-center justify-between px-5 py-4 border border-[#e9e9e7] rounded-lg hover:border-[#37352f] hover:bg-[#f7f6f3] transition group">
                   <div className="flex-1 cursor-pointer" onClick={() => handleLogin(store)}>
-                    <p className="font-bold text-gray-800 group-hover:text-blue-800">{store.name}</p>
+                    <p className="font-bold text-[#37352f] group-hover:text-[#37352f]">{store.name}</p>
                     <p className="text-xs text-gray-400 font-mono mt-1">ID: {store.id.split('-')[0].toUpperCase()}</p>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <span className="text-blue-600 text-sm font-bold opacity-0 group-hover:opacity-100 transition cursor-pointer" onClick={() => handleLogin(store)}>登入 ➔</span>
+                    <span className="text-[#37352f] text-sm font-bold opacity-0 group-hover:opacity-100 transition cursor-pointer" onClick={() => handleLogin(store)}>登入 ➔</span>
                     <button onClick={() => handleDeleteStore(store.id)} className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 transition" title="刪除門市">
                       🗑️
                     </button>
@@ -217,11 +217,11 @@ export default function App() {
               ))}
             </div>
             
-            <div className="mt-8 pt-8 border-t border-gray-100">
-              <h3 className="text-sm font-bold text-gray-500 mb-3">或者建立新門市：</h3>
+            <div className="mt-8 pt-8 border-t border-[#e9e9e7]">
+              <h3 className="text-sm font-bold text-[#9a9a97] mb-3">或者建立新門市：</h3>
               <form onSubmit={handleCreateStore} className="flex space-x-2">
-                <input type="text" placeholder="輸入新門市名稱" value={newStoreName} onChange={e => setNewStoreName(e.target.value)} required className="flex-1 border border-gray-200 px-4 py-2.5 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
-                <button type="submit" className="bg-gray-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:bg-black transition active:scale-95">註冊</button>
+                <input type="text" placeholder="輸入新門市名稱" value={newStoreName} onChange={e => setNewStoreName(e.target.value)} required className="flex-1 border border-[#e9e9e7] px-4 py-2.5 rounded-md text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                <button type="submit" className="bg-gray-900 text-[#37352f] px-5 py-2.5 rounded-md font-bold text-sm shadow-md hover:bg-black transition active:scale-95">註冊</button>
               </form>
             </div>
           </div>
@@ -260,39 +260,39 @@ export default function App() {
   const chartData = generateChartData();
 
   return (
-    <div className="flex h-screen bg-[#F4F7FE] font-sans text-gray-800 overflow-hidden">
+    <div className="flex h-screen bg-[#F4F7FE] font-sans text-[#37352f] overflow-hidden">
       {/* 左側 Sidebar 導覽 - 商用風格 */}
       <aside className="w-64 bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] flex flex-col z-20 print:hidden">
-        <div className="h-20 flex items-center px-8 border-b border-gray-100">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black text-lg mr-3 shadow-md shadow-blue-200">O</div>
-          <h1 className="text-xl font-black text-white tracking-tight">營運總部</h1>
+        <div className="h-20 flex items-center px-8 border-b border-[#e9e9e7]">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-[#37352f] font-black text-lg mr-3 shadow-md shadow-blue-200">O</div>
+          <h1 className="text-xl font-black text-[#37352f] tracking-tight">營運總部</h1>
         </div>
         
         <div className="flex-1 py-6 px-4 space-y-2">
           <p className="px-4 text-xs font-bold text-gray-400 tracking-wider mb-2">營運管理</p>
           <button 
             onClick={() => setActiveTab('orders')}
-            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'orders' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'orders' ? 'bg-blue-600 text-[#37352f] shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-[#37352f]'}`}>
              營業數據分析
           </button>
           <button 
             onClick={() => setActiveTab('inventory')}
-            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'inventory' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'inventory' ? 'bg-blue-600 text-[#37352f] shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-[#37352f]'}`}>
             <Package size={20} className="mr-3" /> 原物料庫存
           </button>
           <button 
             onClick={() => setActiveTab('products')}
-            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'products' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'products' ? 'bg-blue-600 text-[#37352f] shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-[#37352f]'}`}>
              商品目錄庫
           </button>
           <button 
             onClick={() => setActiveTab('qrcodes')}
-            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'qrcodes' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'qrcodes' ? 'bg-blue-600 text-[#37352f] shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-[#37352f]'}`}>
              桌位QR列印
           </button>
           <button 
             onClick={() => setActiveTab('settings')}
-            className={`w-full flex items-center px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'settings' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'settings' ? 'bg-blue-600 text-[#37352f] shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-[#37352f]'}`}>
              系統設定
           </button>
         </div>
@@ -305,18 +305,18 @@ export default function App() {
               navigator.clipboard.writeText(consumerUrl);
               alert('已複製消費者專屬點餐網址！\n\n' + consumerUrl);
             }}
-            className="w-full flex items-center justify-center px-4 py-3 bg-blue-600/20 text-blue-400 rounded-xl font-bold hover:bg-blue-600/30 transition shadow-sm border border-blue-500/30 active:scale-95 text-sm">
+            className="w-full flex items-center justify-center px-4 py-3 bg-blue-600/20 text-blue-400 rounded-md font-bold hover:bg-blue-600/30 transition shadow-sm border border-[#37352f]/30 active:scale-95 text-sm">
             🔗 複製專屬點餐網址
           </button>
         </div>
 
-        <div className="p-4 border-t border-slate-800">
-          <div className="bg-slate-800 rounded-xl p-4 flex items-center space-x-3 border border-slate-700">
+        <div className="p-4 border-t border-[#e9e9e7]">
+          <div className="bg-white rounded-md p-3 flex items-center space-x-3 border border-[#e9e9e7] shadow-sm">
             <img src="https://ui-avatars.com/api/?name=Admin&background=1e3a8a&color=fff" alt="avatar" className="w-10 h-10 rounded-full shadow-sm" />
             <div>
-              <p className="text-sm font-bold text-white">系統管理員</p>
-              <p className="text-xs text-slate-400 font-medium">{tenantName || '未命名門市'}</p>
-              <button onClick={handleLogout} className="text-xs text-blue-600 hover:text-blue-800 font-bold mt-1 underline">切換門市</button>
+              <p className="text-sm font-bold text-[#37352f]">系統管理員</p>
+              <p className="text-xs text-[#9a9a97] font-medium">{tenantName || '未命名門市'}</p>
+              <button onClick={handleLogout} className="text-xs text-[#37352f] hover:text-[#37352f] font-bold mt-1 underline">切換門市</button>
             </div>
           </div>
         </div>
@@ -324,12 +324,12 @@ export default function App() {
 
       {/* 右側主要內容區塊 */}
       <main className="flex-1 flex flex-col h-full overflow-auto">
-        <header className="h-20 bg-white/80 backdrop-blur-md sticky top-0 flex items-center justify-between px-8 z-10 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800">
+        <header className="h-20 bg-white sticky top-0 flex items-center justify-between px-8 z-10 border-b border-[#e9e9e7]">
+          <h2 className="text-xl font-bold text-[#37352f]">
             {activeTab === 'orders' ? '營業數據分析 (Dashboard)' : activeTab === 'products' ? '商品目錄庫 (Products)' : activeTab === 'inventory' ? '原物料庫存 (Inventory)' : '系統設定 (Settings)'}
           </h2>
           <div className="flex items-center space-x-4">
-            <button onClick={() => alert('目前沒有新的系統通知！')} className="relative w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-500 shadow-sm hover:bg-gray-50 transition active:scale-95">
+            <button onClick={() => alert('目前沒有新的系統通知！')} className="relative w-10 h-10 bg-white border border-[#e9e9e7] rounded-full flex items-center justify-center text-[#9a9a97] shadow-sm hover:bg-gray-50 transition active:scale-95">
               🔔<span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
           </div>
@@ -340,60 +340,60 @@ export default function App() {
             <div className="space-y-6 animate-in fade-in duration-300 max-w-5xl mx-auto">
               <div className="mb-6 flex justify-between items-end">
                 <div>
-                  <h3 className="text-2xl font-black text-gray-900">進銷存：原物料管理</h3>
-                  <p className="text-sm text-gray-500 mt-1">管理各項原物料的目前庫存與安全庫存警報水位。</p>
+                  <h3 className="text-2xl font-black text-[#37352f]">進銷存：原物料管理</h3>
+                  <p className="text-sm text-[#9a9a97] mt-1">管理各項原物料的目前庫存與安全庫存警報水位。</p>
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-blue-200 mb-8 bg-blue-50/30">
-                  <h4 className="font-bold text-blue-800 mb-4 flex items-center"><QrCode size={18} className="mr-2"/> 條碼快速進貨 (Barcode Scanner)</h4>
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-blue-200 mb-8 bg-[#f7f6f3]/30">
+                  <h4 className="font-bold text-[#37352f] mb-4 flex items-center"><QrCode size={18} className="mr-2"/> 條碼快速進貨 (Barcode Scanner)</h4>
                   <form onSubmit={handleScanSubmit} className="flex space-x-3">
-                    <input type="text" value={scanBarcode} onChange={e => setScanBarcode(e.target.value)} placeholder="請將游標停在此處，並使用條碼掃描槍刷入..." className="flex-1 border border-blue-200 px-4 py-3 rounded-xl font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none shadow-inner" autoFocus />
-                    <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-md hover:bg-blue-700 active:scale-95">送出條碼</button>
+                    <input type="text" value={scanBarcode} onChange={e => setScanBarcode(e.target.value)} placeholder="請將游標停在此處，並使用條碼掃描槍刷入..." className="flex-1 border border-blue-200 px-4 py-3 rounded-md font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none shadow-inner" autoFocus />
+                    <button type="submit" className="bg-blue-600 text-[#37352f] px-6 py-3 rounded-md font-bold shadow-md hover:bg-[#2f2e2a] active:scale-95">送出條碼</button>
                   </form>
                 </div>
                 
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
-                <h4 className="font-bold text-gray-800 mb-4">新增原物料</h4>
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7] mb-8">
+                <h4 className="font-bold text-[#37352f] mb-4">新增原物料</h4>
                 <form onSubmit={handleCreateMaterial} className="flex space-x-4 items-end">
                   <div className="flex-1">
-                    <label className="block text-xs font-bold text-gray-500 mb-1.5">物料名稱 (例如: 牛奶, 珍珠)</label>
-                    <input type="text" value={newMaterial.name} onChange={e => setNewMaterial({...newMaterial, name: e.target.value})} className="w-full border border-gray-200 bg-gray-50 px-4 py-2.5 rounded-xl font-medium focus:outline-none focus:bg-white focus:border-blue-500" required/>
+                    <label className="block text-xs font-bold text-[#9a9a97] mb-1.5">物料名稱 (例如: 牛奶, 珍珠)</label>
+                    <input type="text" value={newMaterial.name} onChange={e => setNewMaterial({...newMaterial, name: e.target.value})} className="w-full border border-[#e9e9e7] bg-gray-50 px-4 py-2.5 rounded-md font-medium focus:outline-none focus:bg-white focus:border-[#37352f]" required/>
                   </div>
                   <div className="w-24">
-                    <label className="block text-xs font-bold text-gray-500 mb-1.5">當前庫存量</label>
-                    <input type="number" value={newMaterial.stock} onChange={e => setNewMaterial({...newMaterial, stock: e.target.value})} className="w-full border border-gray-200 bg-gray-50 px-4 py-2.5 rounded-xl font-medium focus:outline-none focus:bg-white focus:border-blue-500" required/>
+                    <label className="block text-xs font-bold text-[#9a9a97] mb-1.5">當前庫存量</label>
+                    <input type="number" value={newMaterial.stock} onChange={e => setNewMaterial({...newMaterial, stock: e.target.value})} className="w-full border border-[#e9e9e7] bg-gray-50 px-4 py-2.5 rounded-md font-medium focus:outline-none focus:bg-white focus:border-[#37352f]" required/>
                   </div>
                   <div className="w-24">
-                    <label className="block text-xs font-bold text-gray-500 mb-1.5">單位</label>
-                    <input type="text" value={newMaterial.unit} onChange={e => setNewMaterial({...newMaterial, unit: e.target.value})} className="w-full border border-gray-200 bg-gray-50 px-4 py-2.5 rounded-xl font-medium focus:outline-none focus:bg-white focus:border-blue-500" required/>
+                    <label className="block text-xs font-bold text-[#9a9a97] mb-1.5">單位</label>
+                    <input type="text" value={newMaterial.unit} onChange={e => setNewMaterial({...newMaterial, unit: e.target.value})} className="w-full border border-[#e9e9e7] bg-gray-50 px-4 py-2.5 rounded-md font-medium focus:outline-none focus:bg-white focus:border-[#37352f]" required/>
                   </div>
                   <div className="w-32">
-                    <label className="block text-xs font-bold text-gray-500 mb-1.5">安全警報水位</label>
-                    <input type="number" value={newMaterial.safetyStock} onChange={e => setNewMaterial({...newMaterial, safetyStock: e.target.value})} className="w-full border border-gray-200 bg-gray-50 px-4 py-2.5 rounded-xl font-medium focus:outline-none focus:bg-white focus:border-blue-500" required/>
+                    <label className="block text-xs font-bold text-[#9a9a97] mb-1.5">安全警報水位</label>
+                    <input type="number" value={newMaterial.safetyStock} onChange={e => setNewMaterial({...newMaterial, safetyStock: e.target.value})} className="w-full border border-[#e9e9e7] bg-gray-50 px-4 py-2.5 rounded-md font-medium focus:outline-none focus:bg-white focus:border-[#37352f]" required/>
                   </div>
-                  <button type="submit" className="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-md hover:bg-blue-700 active:scale-95 mb-[2px]">
+                  <button type="submit" className="bg-blue-600 text-[#37352f] px-6 py-2.5 rounded-md font-bold shadow-md hover:bg-[#2f2e2a] active:scale-95 mb-[2px]">
                     + 新增物料
                   </button>
                 </form>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <h4 className="font-bold text-gray-800 mb-4">現有庫存列表</h4>
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7]">
+                <h4 className="font-bold text-[#37352f] mb-4">現有庫存列表</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {rawMaterials.map(m => {
                     const isLowStock = Number(m.stock) <= Number(m.safetyStock);
                     return (
-                      <div key={m.id} className={`p-4 rounded-xl border flex justify-between items-center transition ${isLowStock ? 'bg-red-50 border-red-200' : 'bg-gray-50 border-gray-200'}`}>
+                      <div key={m.id} className={`p-4 rounded-md border flex justify-between items-center transition ${isLowStock ? 'bg-red-50 border-red-200' : 'bg-gray-50 border-[#e9e9e7]'}`}>
                         <div>
-                          <h5 className="font-black text-gray-900 text-lg flex items-center">
+                          <h5 className="font-black text-[#37352f] text-lg flex items-center">
                             {m.name} 
                             {isLowStock && <AlertCircle size={16} className="text-red-500 ml-2" />}
                           </h5>
-                          <p className="text-xs text-gray-500 font-bold mt-1">安全水位: {m.safetyStock} {m.unit}</p>
+                          <p className="text-xs text-[#9a9a97] font-bold mt-1">安全水位: {m.safetyStock} {m.unit}</p>
                         </div>
                         <div className="text-right flex flex-col items-end">
-                          <span className={`text-2xl font-black ${isLowStock ? 'text-red-600' : 'text-blue-600'}`}>
+                          <span className={`text-2xl font-black ${isLowStock ? 'text-red-600' : 'text-[#37352f]'}`}>
                             {m.stock} <span className="text-sm">{m.unit}</span>
                           </span>
                           <button onClick={() => handleDeleteMaterial(m.id)} className="text-xs text-red-500 font-bold hover:underline mt-2">移除</button>
@@ -413,35 +413,35 @@ export default function App() {
             <div className="space-y-6 animate-in fade-in duration-300 max-w-5xl mx-auto">
               <div className="flex justify-between items-end">
                 <div>
-                  <h3 className="text-2xl font-black text-gray-900">商品目錄管理</h3>
-                  <p className="text-sm text-gray-500 mt-1">在這裡新增或修改您的門市菜單與商品圖片。</p>
+                  <h3 className="text-2xl font-black text-[#37352f]">商品目錄管理</h3>
+                  <p className="text-sm text-[#9a9a97] mt-1">在這裡新增或修改您的門市菜單與商品圖片。</p>
                 </div>
                 <button 
                   onClick={() => setEditingProduct({ name: '', price: '' })}
-                  className="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200 active:scale-95">
+                  className="bg-blue-600 text-[#37352f] px-6 py-2.5 rounded-md font-bold hover:bg-[#2f2e2a] transition shadow-lg shadow-blue-200 active:scale-95">
                   ➕ 新增商品
                 </button>
               </div>
 
               {/* 編輯/新增商品 Modal 表單 (直接內嵌展開) */}
               {editingProduct && (
-                <div className="bg-white p-6 rounded-2xl shadow-lg border border-blue-100 ring-4 ring-blue-50 relative animate-in slide-in-from-top-4">
+                <div className="bg-white p-6 rounded-lg shadow-lg border border-blue-100 ring-4 ring-blue-50 relative animate-in slide-in-from-top-4">
                   <button onClick={() => setEditingProduct(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-black">✕</button>
-                  <h4 className="text-lg font-bold text-gray-900 mb-4">{editingProduct.id ? '編輯商品資料' : '建立新商品'}</h4>
+                  <h4 className="text-lg font-bold text-[#37352f] mb-4">{editingProduct.id ? '編輯商品資料' : '建立新商品'}</h4>
                   
                   <form onSubmit={handleSaveProduct} className="flex space-x-6">
                     {/* 上傳圖片按鈕 */}
                     <div className="shrink-0 flex flex-col items-center justify-center">
                       <div 
                         onClick={() => fileInputRef.current?.click()}
-                        className="w-24 h-24 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 cursor-pointer hover:bg-gray-100 overflow-hidden relative group transition">
+                        className="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 cursor-pointer hover:bg-gray-100 overflow-hidden relative group transition">
                         {editingProduct.imageUrl ? (
                           <img src={editingProduct.imageUrl} alt="preview" className="w-full h-full object-cover" />
                         ) : (
                           <span className="text-2xl text-gray-400 group-hover:scale-110 transition">📷</span>
                         )}
                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                          <span className="text-white text-xs font-bold">更換圖片</span>
+                          <span className="text-[#37352f] text-xs font-bold">更換圖片</span>
                         </div>
                       </div>
                       <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
@@ -450,22 +450,22 @@ export default function App() {
                     <div className="flex-1 space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-bold text-gray-500 mb-1.5">分類 (Category)</label>
-          <input type="text" className="w-full border border-gray-200 bg-gray-50 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-medium transition" value={editingProduct.category || ''} onChange={e => setEditingProduct({...editingProduct, category: e.target.value})} placeholder="主食, 飲料" required/>
+          <label className="block text-xs font-bold text-[#9a9a97] mb-1.5">分類 (Category)</label>
+          <input type="text" className="w-full border border-[#e9e9e7] bg-gray-50 px-4 py-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-medium transition" value={editingProduct.category || ''} onChange={e => setEditingProduct({...editingProduct, category: e.target.value})} placeholder="主食, 飲料" required/>
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-500 mb-1.5">商品名稱</label>
-                        <input type="text" className="w-full border border-gray-200 bg-gray-50 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-medium transition" value={editingProduct.name} onChange={e => setEditingProduct({...editingProduct, name: e.target.value})} required/>
+          <label className="block text-xs font-bold text-[#9a9a97] mb-1.5">商品名稱</label>
+                        <input type="text" className="w-full border border-[#e9e9e7] bg-gray-50 px-4 py-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-medium transition" value={editingProduct.name} onChange={e => setEditingProduct({...editingProduct, name: e.target.value})} required/>
         </div>
       </div>
                       <div>
-                        <label className="block text-xs font-bold text-gray-500 mb-1.5">標準售價 (NT$)</label>
-                        <input type="number" className="w-full border border-gray-200 bg-gray-50 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-medium transition" value={editingProduct.price} onChange={e => setEditingProduct({...editingProduct, price: e.target.value})} required/>
+                        <label className="block text-xs font-bold text-[#9a9a97] mb-1.5">標準售價 (NT$)</label>
+                        <input type="number" className="w-full border border-[#e9e9e7] bg-gray-50 px-4 py-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-medium transition" value={editingProduct.price} onChange={e => setEditingProduct({...editingProduct, price: e.target.value})} required/>
                       </div>
                     </div>
                     
                     <div className="shrink-0 flex items-end">
-                      <button type="submit" className="bg-gray-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-black transition shadow-md active:scale-95 h-[46px]">
+                      <button type="submit" className="bg-gray-900 text-[#37352f] px-8 py-3 rounded-md font-bold hover:bg-black transition shadow-md active:scale-95 h-[46px]">
                         儲存變更
                       </button>
                     </div>
@@ -474,10 +474,10 @@ export default function App() {
               )}
 
               {/* 商品列表 Data Table */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-white rounded-lg shadow-sm border border-[#e9e9e7] overflow-hidden">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    <tr className="bg-gray-50 border-b border-[#e9e9e7] text-xs font-bold text-[#9a9a97] uppercase tracking-wider">
                       <th className="py-4 px-6 w-20">圖示</th>
                       <th className="py-4 px-6">商品名稱 (Name)</th>
                       <th className="py-4 px-6">SKU (ID)</th>
@@ -489,17 +489,17 @@ export default function App() {
                     {products.length === 0 ? (
                       <tr><td colSpan={5} className="py-12 text-center text-gray-400 font-medium">系統目前沒有任何商品</td></tr>
                     ) : products.map(p => (
-                      <tr key={p.id} className="hover:bg-blue-50/50 transition-colors group">
+                      <tr key={p.id} className="hover:bg-[#f7f6f3]/50 transition-colors group">
                         <td className="py-3 px-6">
-                          <div className="w-10 h-10 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden">
+                          <div className="w-10 h-10 rounded-lg bg-gray-100 border border-[#e9e9e7] flex items-center justify-center overflow-hidden">
                             {p.imageUrl ? <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" /> : <span className="text-gray-400 text-xs">無圖</span>}
                           </div>
                         </td>
-                        <td className="py-3 px-6 font-bold text-gray-800">{p.name}</td>
+                        <td className="py-3 px-6 font-bold text-[#37352f]">{p.name}</td>
                         <td className="py-3 px-6 text-xs text-gray-400 font-mono">{p.id.split('-')[0].toUpperCase()}</td>
-                        <td className="py-3 px-6 font-black text-gray-900 text-right">NT$ {p.price}</td>
+                        <td className="py-3 px-6 font-black text-[#37352f] text-right">NT$ {p.price}</td>
                         <td className="py-3 px-6 text-center">
-                          <button onClick={() => setEditingProduct(p)} className="text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-4 py-1.5 rounded-lg text-xs font-bold transition">
+                          <button onClick={() => setEditingProduct(p)} className="text-[#37352f] hover:text-[#37352f] bg-[#f7f6f3] hover:bg-blue-100 px-4 py-1.5 rounded-lg text-xs font-bold transition">
                             編輯
                           </button>
                         </td>
@@ -514,11 +514,11 @@ export default function App() {
             <div className="space-y-6 animate-in fade-in duration-300 max-w-6xl mx-auto">
               {/* 營業數據圖表 */}
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                <div className="lg:col-span-3 bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7]">
                   <div className="mb-6 flex justify-between items-center">
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800">營業額趨勢 (Revenue Trend)</h2>
-                      <p className="text-xs text-gray-500 mt-1">近七日歷史營收分析</p>
+                      <h2 className="text-lg font-bold text-[#37352f]">營業額趨勢 (Revenue Trend)</h2>
+                      <p className="text-xs text-[#9a9a97] mt-1">近七日歷史營收分析</p>
                     </div>
                   </div>
                   <ResponsiveContainer width="100%" height={260}>
@@ -533,16 +533,16 @@ export default function App() {
                 </div>
 
                 <div className="space-y-6">
-                  <div className="bg-gradient-to-br from-blue-700 to-indigo-800 p-6 rounded-2xl shadow-lg shadow-blue-900/20 text-white flex flex-col justify-center relative overflow-hidden h-[155px]">
+                  <div className="bg-gradient-to-br from-blue-700 to-indigo-800 p-6 rounded-lg shadow-lg shadow-blue-900/20 text-[#37352f] flex flex-col justify-center relative overflow-hidden h-[155px]">
                     <div className="relative z-10">
                       <p className="text-xs font-bold text-blue-200 uppercase tracking-widest mb-2">本日總營業額</p>
                       <p className="text-4xl font-black">NT$ {totalRevenue}</p>
                     </div>
                     <div className="absolute -right-6 -bottom-6 text-9xl opacity-10">💰</div>
                   </div>
-                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 h-[155px] flex flex-col justify-center">
+                  <div className="bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7] h-[155px] flex flex-col justify-center">
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">出餐達成率</p>
-                    <p className="text-3xl font-black text-gray-900">
+                    <p className="text-3xl font-black text-[#37352f]">
                       {orders.length > 0 ? Math.round((completedOrders / orders.length) * 100) : 0}% 
                       <span className="text-sm text-gray-400 ml-2 font-bold">({completedOrders}/{orders.length}筆)</span>
                     </p>
@@ -554,12 +554,12 @@ export default function App() {
               </div>
 
               {/* 歷史訂單列表 */}
-              <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                <h2 className="text-lg font-bold text-gray-800 mb-6">即時訂單流 (Order Stream)</h2>
+              <section className="bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7]">
+                <h2 className="text-lg font-bold text-[#37352f] mb-6">即時訂單流 (Order Stream)</h2>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50">
+                      <tr className="border-b border-[#e9e9e7] text-xs font-bold text-[#9a9a97] uppercase tracking-wider bg-gray-50">
                         <th className="py-4 px-6 rounded-tl-lg">訂單編號 (Order ID)</th>
                         <th className="py-4 px-6">時間 (Time)</th>
                         <th className="py-4 px-6">狀態 (Status)</th>
@@ -573,14 +573,14 @@ export default function App() {
                       ) : orders.map(o => (
                         <tr key={o.id} className="hover:bg-gray-50 transition">
                           <td className="py-4 px-6 font-mono text-sm font-bold text-gray-700">#{o.id.split('-')[0].toUpperCase()}</td>
-                          <td className="py-4 px-6 text-sm text-gray-500 font-medium">{new Date(o.createdAt).toLocaleString()}</td>
+                          <td className="py-4 px-6 text-sm text-[#9a9a97] font-medium">{new Date(o.createdAt).toLocaleString()}</td>
                           <td className="py-4 px-6">
                             <span className={`px-3 py-1 rounded-full font-bold text-xs ${o.status === 'COMPLETED' ? 'bg-green-100 text-green-700 border border-green-200' : o.status === 'PREPARING' ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-orange-100 text-orange-700 border border-orange-200'}`}>
                               {o.status === 'COMPLETED' ? '已完成' : o.status === 'PREPARING' ? '準備中' : '等待接單'}
                             </span>
                           </td>
-                          <td className="py-4 px-6 font-black text-gray-900">NT$ {o.totalAmount}</td>
-                          <td className="py-4 px-6 text-xs text-gray-500 font-medium leading-relaxed">
+                          <td className="py-4 px-6 font-black text-[#37352f]">NT$ {o.totalAmount}</td>
+                          <td className="py-4 px-6 text-xs text-[#9a9a97] font-medium leading-relaxed">
                             {o.items?.map((i: any) => `${i.product?.name || '未知商品'} x${i.quantity}`).join(', ')}
                           </td>
                         </tr>
@@ -596,8 +596,8 @@ export default function App() {
             <div className="space-y-6 animate-in fade-in duration-300 max-w-5xl mx-auto print:max-w-none print:m-0 print:p-0">
               <div className="mb-6 flex justify-between items-end print:hidden">
                 <div>
-                  <h3 className="text-2xl font-black text-gray-900">桌位 QR Code 管理</h3>
-                  <p className="text-sm text-gray-500 mt-1">大量產生專屬桌號條碼，供門市列印與佈置</p>
+                  <h3 className="text-2xl font-black text-[#37352f]">桌位 QR Code 管理</h3>
+                  <p className="text-sm text-[#9a9a97] mt-1">大量產生專屬桌號條碼，供門市列印與佈置</p>
                 </div>
                 <div className="flex space-x-3">
                   <form onSubmit={async (e) => { 
@@ -613,10 +613,10 @@ export default function App() {
                         });
                       } 
                     }} className="flex">
-                    <input type="text" placeholder="新增桌號..." value={newTable} onChange={e => setNewTable(e.target.value)} className="border border-gray-200 px-3 py-2 rounded-l-xl text-sm focus:outline-none focus:border-blue-500 w-32" />
-                    <button type="submit" className="bg-gray-100 px-4 py-2 text-sm font-bold border border-l-0 border-gray-200 rounded-r-xl hover:bg-gray-200">新增</button>
+                    <input type="text" placeholder="新增桌號..." value={newTable} onChange={e => setNewTable(e.target.value)} className="border border-[#e9e9e7] px-3 py-2 rounded-l-xl text-sm focus:outline-none focus:border-[#37352f] w-32" />
+                    <button type="submit" className="bg-gray-100 px-4 py-2 text-sm font-bold border border-l-0 border-[#e9e9e7] rounded-r-xl hover:bg-gray-200">新增</button>
                   </form>
-                  <button onClick={() => window.print()} className="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold shadow-md hover:bg-blue-700 active:scale-95">
+                  <button onClick={() => window.print()} className="bg-blue-600 text-[#37352f] px-6 py-2 rounded-md font-bold shadow-md hover:bg-[#2f2e2a] active:scale-95">
                     🖨️ 列印全部
                   </button>
                 </div>
@@ -624,8 +624,8 @@ export default function App() {
 
               <div className="grid grid-cols-3 gap-8 print:grid-cols-4 print:gap-4 print:w-full">
                 {tables.map(table => (
-                  <div key={table} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center print:border-gray-400 print:shadow-none print:p-4">
-                    <p className="text-2xl font-black text-gray-900 mb-4 tracking-widest">{table}桌</p>
+                  <div key={table} className="bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7] flex flex-col items-center print:border-gray-400 print:shadow-none print:p-4">
+                    <p className="text-2xl font-black text-[#37352f] mb-4 tracking-widest">{table}桌</p>
                     <img 
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`${(import.meta.env.VITE_CONSUMER_URL || 'http://localhost:3001').replace(/\/$/, '')}/?store=${tenantId}&table=${table}`)}`} 
                       alt={`Table ${table} QR`}
@@ -655,26 +655,26 @@ export default function App() {
           {activeTab === 'settings' && (
             <div className="space-y-6 animate-in fade-in duration-300 max-w-4xl mx-auto">
               <div className="mb-6">
-                <h3 className="text-2xl font-black text-gray-900">系統設定</h3>
-                <p className="text-sm text-gray-500 mt-1">管理<Settings size={20} className="mr-3" /> 門市基本資料與硬體設備連線狀態。</p>
+                <h3 className="text-2xl font-black text-[#37352f]">系統設定</h3>
+                <p className="text-sm text-[#9a9a97] mt-1">管理<Settings size={20} className="mr-3" /> 門市基本資料與硬體設備連線狀態。</p>
               </div>
 
-              <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 space-y-8">
+              <div className="bg-white p-8 rounded-lg shadow-sm border border-[#e9e9e7] space-y-8">
                 <form onSubmit={handleUpdateStoreProfile} className="mb-8">
-                  <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center"><Building2 size={20} className="mr-2 text-blue-600" /> <Settings size={20} className="mr-3" /> 門市基本資料維護</h4>
+                  <h4 className="text-lg font-bold text-[#37352f] mb-4 flex items-center"><Building2 size={20} className="mr-2 text-[#37352f]" /> <Settings size={20} className="mr-3" /> 門市基本資料維護</h4>
                   <div className="flex flex-col space-y-4 max-w-md">
                     <div>
                       <label className="block text-sm font-bold text-gray-700 mb-2">門市名稱</label>
-                      <input type="text" value={tenantName || ''} onChange={e => setTenantName(e.target.value)} className="w-full border border-gray-200 bg-white px-4 py-2.5 rounded-xl font-medium focus:outline-none focus:border-blue-500" />
+                      <input type="text" value={tenantName || ''} onChange={e => setTenantName(e.target.value)} className="w-full border border-[#e9e9e7] bg-white px-4 py-2.5 rounded-md font-medium focus:outline-none focus:border-[#37352f]" />
                     </div>
                     <div>
                       <label className="block text-sm font-bold text-gray-700 mb-2">營業狀態</label>
-                      <select className="w-full border border-gray-200 bg-white px-4 py-2.5 rounded-xl font-medium focus:outline-none focus:border-blue-500">
+                      <select className="w-full border border-[#e9e9e7] bg-white px-4 py-2.5 rounded-md font-medium focus:outline-none focus:border-[#37352f]">
                         <option value="open">🟢 正常營業中</option>
                         <option value="closed">🔴 暫停營業 (打烊)</option>
                       </select>
                     </div>
-                    <button type="submit" className="bg-gray-900 text-white px-6 py-2.5 rounded-xl font-bold shadow-md hover:bg-black active:scale-95 w-32 mt-2">
+                    <button type="submit" className="bg-gray-900 text-[#37352f] px-6 py-2.5 rounded-md font-bold shadow-md hover:bg-black active:scale-95 w-32 mt-2">
                       儲存變更
                     </button>
                   </div>
