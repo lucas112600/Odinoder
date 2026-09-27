@@ -191,11 +191,11 @@ export default function App() {
 
   if (!tenantId) {
     return (
-      <div className="min-h-screen bg-[#F4F7FE] flex items-center justify-center p-4 font-sans text-gray-800">
-        <div className="bg-white rounded-3xl shadow-xl w-full max-w-4xl flex overflow-hidden min-h-[500px]">
-          <div className="w-1/2 bg-blue-600 text-white p-12 flex flex-col justify-center">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 font-sans text-slate-800">
+        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl flex overflow-hidden min-h-[500px]">
+          <div className="w-1/2 bg-slate-800 text-white p-12 flex flex-col justify-center">
             <h1 className="text-4xl font-black mb-4">營運總部 總營運管理</h1>
-            <p className="text-blue-100 leading-relaxed font-medium">歡迎回到雲端 SaaS 門市管理系統。請在右側選擇您要管理的門市，或是建立全新的餐飲品牌據點。</p>
+            <p className="text-slate-300 leading-relaxed font-medium">歡迎回到雲端 SaaS 門市管理系統。請在右側選擇您要管理的門市，或是建立全新的餐飲品牌據點。</p>
           </div>
           <div className="w-1/2 p-12 flex flex-col h-[500px] overflow-auto">
             <h2 className="text-2xl font-black text-gray-900 mb-6">選擇門市登入</h2>
