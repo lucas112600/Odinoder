@@ -297,7 +297,7 @@ export default function App() {
         <div className="bg-white border border-[#e9e9e7] rounded-lg shadow-sm w-full max-w-4xl flex overflow-hidden min-h-[500px]">
           <div className="w-1/2 bg-[#f7f6f3] text-[#37352f] p-12 border-r border-[#e9e9e7] flex flex-col justify-center">
             <h1 className="text-4xl font-black mb-4 text-[#37352f]">{tenantName || 'Odinoder'} 營運總部</h1>
-            <p className="text-[#787774] leading-relaxed font-medium">歡迎回到雲端 SaaS 門市管理系統。請在右側選擇您要管理的門市，或是建立全新的餐飲品牌據點。</p>
+            <p className="text-[#787774] leading-relaxed font-medium">請選擇要登入的營運門市，或於下方新增門市據點以開始使用系統。</p>
           </div>
           <div className="w-1/2 p-12 flex flex-col h-[500px] overflow-auto">
             <h2 className="text-2xl font-black text-[#37352f] mb-6">選擇門市登入</h2>
