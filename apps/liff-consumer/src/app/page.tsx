@@ -3,7 +3,8 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { ShoppingCart, CheckCircle, Clock, X, MessageSquare, Plus, Minus } from 'lucide-react';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://odinoder-api.onrender.com';
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://odinoder-api.onrender.com';
+const API_BASE = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
 
 interface CartItem {
   cartItemId: string;
@@ -44,7 +45,7 @@ function OrderingContent() {
 
     fetch(`${API_BASE}/products/tenant/${tenantId}`)
       .then(res => res.json())
-      .then(data => setProducts(data))
+      .then(data => setProducts(Array.isArray(data) ? data : []))
       .catch(e => console.error('無法載入菜單', e));
   }, [tenantId]);
 

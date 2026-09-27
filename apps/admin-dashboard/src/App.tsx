@@ -1,7 +1,8 @@
 import { Package, AlertCircle, Building2, Settings, QrCode, CheckCircle, Clock, XCircle, CreditCard } from 'lucide-react';
 import { io } from 'socket.io-client';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
+const rawApiUrl = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
+const API_BASE = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
 import React, { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 

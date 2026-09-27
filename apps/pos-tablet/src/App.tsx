@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
+const rawApiUrl = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
+const API_BASE = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
 
 // 音效提示函數
 const playBeep = () => {
