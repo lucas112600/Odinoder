@@ -398,37 +398,37 @@ export default function App() {
           <p className="px-4 text-xs font-bold text-gray-400 tracking-wider mb-2">營運管理</p>
           <button 
             onClick={() => setActiveTab('orders')}
-            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'orders' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
+            className={`w-full flex items-center justify-center md:justify-start px-2 md:px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'orders' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
              營業數據分析
           </button>
             <button 
               onClick={() => setActiveTab('pos')}
-              className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'pos' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
-              <ShoppingCart size={20} className="mr-3" /> 櫃檯收銀 (POS)
+              className={`w-full flex items-center justify-center md:justify-start px-2 md:px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'pos' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
+              <ShoppingCart size={20} className="mr-3 shrink-0" /> <span className="hidden md:inline whitespace-nowrap">櫃檯收銀 (POS)</span>
             </button>
             <button 
               onClick={() => setActiveTab('history')}
-              className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'history' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
-              <History size={20} className="mr-3" /> 歷史紀錄與查詢
+              className={`w-full flex items-center justify-center md:justify-start px-2 md:px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'history' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
+              <History size={20} className="mr-3 shrink-0" /> <span className="hidden md:inline whitespace-nowrap">歷史紀錄與查詢</span>
             </button>
           <button 
             onClick={() => setActiveTab('inventory')}
-            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'inventory' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
+            className={`w-full flex items-center justify-center md:justify-start px-2 md:px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'inventory' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
             <Package size={20} className="mr-3" /> 原物料庫存
           </button>
           <button 
             onClick={() => setActiveTab('products')}
-            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'products' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
+            className={`w-full flex items-center justify-center md:justify-start px-2 md:px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'products' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
              商品目錄庫
           </button>
           <button 
             onClick={() => setActiveTab('qrcodes')}
-            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'qrcodes' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
+            className={`w-full flex items-center justify-center md:justify-start px-2 md:px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'qrcodes' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
              桌位QR列印
           </button>
           <button 
             onClick={() => setActiveTab('settings')}
-            className={`w-full flex items-center px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'settings' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
+            className={`w-full flex items-center justify-center md:justify-start px-2 md:px-4 py-3 rounded-md font-bold transition-all ${activeTab === 'settings' ? 'bg-[#37352f] text-white shadow-sm' : 'text-[#9a9a97] hover:bg-[#efefef] hover:text-[#37352f]'}`}>
              系統設定
           </button>
         </div>
@@ -739,9 +739,9 @@ export default function App() {
             {activeTab === 'pos' && (
               <div className="flex space-x-6 h-full max-w-7xl mx-auto animate-in fade-in duration-300">
                 {/* 左側商品區 */}
-                <div className="flex-1 bg-[#f7f6f3] p-6 rounded-lg border border-[#e9e9e7] overflow-auto h-[80vh]">
+                <div className="flex-1 bg-[#f7f6f3] p-4 md:p-6 rounded-lg border border-[#e9e9e7] overflow-auto h-auto lg:h-[80vh] min-h-[50vh]">
                   <h3 className="text-xl font-black text-[#37352f] mb-6">點餐區</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                     {products.map(p => (
                       <div key={p.id} onClick={() => !p.isSoldOut && addToCart(p)} className={`bg-white p-4 rounded-lg border border-[#e9e9e7] shadow-sm flex flex-col items-center justify-center text-center transition ${p.isSoldOut ? 'opacity-50 grayscale' : 'cursor-pointer hover:border-[#37352f] active:scale-95'}`}>
                         {p.imageUrl ? (
@@ -758,7 +758,7 @@ export default function App() {
                 </div>
 
                 {/* 右側購物車區 */}
-                <div className="w-96 bg-white p-6 rounded-lg border border-[#e9e9e7] shadow-sm flex flex-col h-[80vh]">
+                <div className="w-full lg:w-96 bg-white p-4 md:p-6 rounded-lg border border-[#e9e9e7] shadow-sm flex flex-col h-auto lg:h-[80vh] shrink-0">
                   <h3 className="text-xl font-black text-[#37352f] mb-4 flex items-center justify-between">
                     結帳明細
                     <span className="bg-[#f7f6f3] px-3 py-1 rounded text-sm text-[#9a9a97]">{cart.reduce((s, i)=>s+i.quantity,0)} 項</span>
@@ -939,12 +939,12 @@ export default function App() {
             <div className="space-y-6 animate-in fade-in duration-300 max-w-4xl mx-auto">
               <div className="mb-6">
                 <h3 className="text-2xl font-black text-[#37352f]">系統設定</h3>
-                <p className="text-sm text-[#9a9a97] mt-1">管理<Settings size={20} className="mr-3" /> 門市基本資料與硬體設備連線狀態。</p>
+                <p className="text-sm text-[#9a9a97] mt-1">管理<Settings size={20} className="mr-3 shrink-0" /> <span className="hidden md:inline whitespace-nowrap">門市基本資料與硬體設備連線狀態。</p></span>
               </div>
 
               <div className="bg-white p-8 rounded-lg shadow-sm border border-[#e9e9e7] space-y-8">
                 <form onSubmit={handleUpdateStoreProfile} className="mb-8">
-                  <h4 className="text-lg font-bold text-[#37352f] mb-4 flex items-center"><Building2 size={20} className="mr-2 text-[#37352f]" /> <Settings size={20} className="mr-3" /> 門市基本資料維護</h4>
+                  <h4 className="text-lg font-bold text-[#37352f] mb-4 flex items-center"><Building2 size={20} className="mr-2 text-[#37352f]" /> <Settings size={20} className="mr-3 shrink-0" /> <span className="hidden md:inline whitespace-nowrap">門市基本資料維護</h4></span>
                   <div className="flex flex-col space-y-4 max-w-md">
                     <div>
                       <label className="block text-sm font-bold text-gray-700 mb-2">門市名稱</label>
@@ -971,7 +971,7 @@ export default function App() {
 
                 <div className="bg-white p-8 rounded-lg shadow-sm border border-[#e9e9e7] mt-8">
                   <h4 className="text-lg font-bold text-[#37352f] mb-4 flex items-center">
-                    <Clock size={20} className="mr-3 text-[#37352f]" /> 
+                    <Clock size={20} className="mr-3 shrink-0 text-[#37352f]" /> <span className="hidden md:inline whitespace-nowrap"></span>
                     每日結單與交接班 (Z-Report)
                   </h4>
                   <div className="bg-[#f7f6f3] border border-[#e9e9e7] rounded-md p-6 max-w-md font-mono text-sm">
