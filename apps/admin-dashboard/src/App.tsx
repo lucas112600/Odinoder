@@ -124,7 +124,30 @@ export default function App() {
     } catch(e) {}
   };
   
-  const updateOrderStatus = async (id: string, status: string) => {
+  
+  const handleScanSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if(!scanBarcode) return;
+    const item = rawMaterials.find(rm => rm.barcode === scanBarcode);
+    if (item) {
+      const addAmt = window.prompt(`找到物料 [${item.name}] (目前庫存: ${item.stock} ${item.unit})\n請輸入要進貨的數量:`);
+      if(addAmt && !isNaN(Number(addAmt))) {
+        try {
+          await fetch(`${API_BASE}/raw-materials/${item.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stock: item.stock + Number(addAmt) })
+          });
+          fetchRawMaterials();
+        } catch(err) {}
+      }
+    } else {
+      alert('系統找不到此條碼！請在下方新增該原物料。');
+      setNewMaterial({...newMaterial, barcode: scanBarcode});
+    }
+    setScanBarcode('');
+  };
+const updateOrderStatus = async (id: string, status: string) => {
     try {
       await fetch(`${API_BASE}/orders/${id}/status`, {
         method: 'PATCH',
@@ -170,12 +193,24 @@ export default function App() {
     
 
   const fetchOrders = async () => {
+    try {
       const res = await fetch(`${API_BASE}/orders/tenant/${tenantId}`);
-      setOrders(await res.json());
-    };
+      const data = await res.json();
+      setOrders(Array.isArray(data) ? data : []);
+    } catch(err) {}
+  };
+
+  if (tenantId) {
     fetchProducts();
     fetchOrders();
-  }, [tenantId]);
+
+    const socket = io(API_BASE);
+    socket.on('connect', () => socket.emit('joinTenant', tenantId));
+    socket.on('newOrder', (o) => setOrders(prev => [o, ...prev]));
+    socket.on('orderStatusUpdated', (o) => setOrders(prev => prev.map(order => order.id === o.id ? o : order)));
+    
+    return () => { socket.disconnect(); };
+  }  }, [tenantId]);
 
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -523,88 +558,95 @@ export default function App() {
             </div>
           )}
           {activeTab === 'orders' && (
-            <div className="space-y-6 animate-in fade-in duration-300 max-w-6xl mx-auto">
-              {/* 營業數據圖表 */}
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div className="lg:col-span-3 bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7]">
-                  <div className="mb-6 flex justify-between items-center">
-                    <div>
-                      <h2 className="text-lg font-bold text-[#37352f]">營業額趨勢 (Revenue Trend)</h2>
-                      <p className="text-xs text-[#9a9a97] mt-1">近七日歷史營收分析</p>
+              <div className="animate-in fade-in duration-300 max-w-6xl mx-auto flex flex-col h-full">
+                <div className="mb-6 flex justify-between items-end">
+                  <div>
+                    <h3 className="text-2xl font-black text-[#37352f]">收銀與接單作業</h3>
+                    <p className="text-sm text-[#9a9a97] mt-1">即時處理顧客線上點餐、確認結帳與出餐進度</p>
+                  </div>
+                  <div className="flex space-x-4">
+                    <div className="bg-white px-4 py-2 rounded-md shadow-sm border border-[#e9e9e7] flex flex-col items-center">
+                      <span className="text-xs font-bold text-[#9a9a97]">今日營收</span>
+                      <span className="text-lg font-black text-[#37352f]">NT$ {orders.filter(o => o.status === 'COMPLETED' && new Date(o.createdAt).toDateString() === new Date().toDateString()).reduce((sum, o) => sum + Number(o.totalAmount || 0), 0)}</span>
                     </div>
                   </div>
-                  <ResponsiveContainer width="100%" height={260}>
-                    <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dx={-10} />
-                      <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 'bold' }} />
-                      <Bar dataKey="sales" fill="#2563eb" radius={[6, 6, 0, 0]} barSize={40} />
-                    </BarChart>
-                  </ResponsiveContainer>
                 </div>
 
-                <div className="space-y-6">
-                  <div className="bg-gradient-to-br from-blue-700 to-indigo-800 p-6 rounded-lg shadow-lg shadow-blue-900/20 text-[#37352f] flex flex-col justify-center relative overflow-hidden h-[155px]">
-                    <div className="relative z-10">
-                      <p className="text-xs font-bold text-blue-200 uppercase tracking-widest mb-2">本日總營業額</p>
-                      <p className="text-4xl font-black">NT$ {totalRevenue}</p>
+                <div className="grid grid-cols-3 gap-6 flex-1 items-start">
+                  <div className="bg-[#f7f6f3] rounded-lg border border-[#e9e9e7] p-4 flex flex-col h-[70vh]">
+                    <h4 className="font-bold text-[#37352f] mb-4 flex items-center"><AlertCircle size={18} className="mr-2 text-yellow-600"/> 待確認 (新訂單)</h4>
+                    <div className="flex-1 overflow-auto space-y-4 pr-2">
+                      {orders.filter(o => o.status === 'PENDING').map(order => (
+                        <div key={order.id} className="bg-white p-4 rounded-md shadow-sm border border-[#e9e9e7]">
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="font-black text-lg text-[#37352f]">{order.id.split('-')[0].toUpperCase()}</span>
+                            <span className="text-xs font-bold bg-yellow-100 text-yellow-800 px-2 py-1 rounded">{order.table}</span>
+                          </div>
+                          <div className="text-sm text-[#37352f] mb-4 space-y-1">
+                            {order.items?.map((item: any) => (
+                              <div key={item.id} className="flex justify-between">
+                                <span>{item.quantity}x {item.product?.name}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex justify-between items-center pt-3 border-t border-[#e9e9e7]">
+                            <span className="font-black text-lg">NT$ {order.totalAmount}</span>
+                            <button onClick={() => updateOrderStatus(order.id, 'PREPARING')} className="bg-[#37352f] text-white px-4 py-2 rounded font-bold text-sm hover:bg-[#2f2e2a]">確認接單</button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className="absolute -right-6 -bottom-6 text-9xl opacity-10">💰</div>
                   </div>
-                  <div className="bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7] h-[155px] flex flex-col justify-center">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">出餐達成率</p>
-                    <p className="text-3xl font-black text-[#37352f]">
-                      {orders.length > 0 ? Math.round((completedOrders / orders.length) * 100) : 0}% 
-                      <span className="text-sm text-gray-400 ml-2 font-bold">({completedOrders}/{orders.length}筆)</span>
-                    </p>
-                    <div className="w-full bg-gray-100 h-2 rounded-full mt-4 overflow-hidden">
-                      <div className="bg-green-500 h-full rounded-full transition-all duration-1000" style={{ width: `${orders.length > 0 ? (completedOrders / orders.length) * 100 : 0}%` }}></div>
+
+                  <div className="bg-[#f7f6f3] rounded-lg border border-[#e9e9e7] p-4 flex flex-col h-[70vh]">
+                    <h4 className="font-bold text-[#37352f] mb-4 flex items-center"><Clock size={18} className="mr-2 text-blue-600"/> 製作中 (未結帳)</h4>
+                    <div className="flex-1 overflow-auto space-y-4 pr-2">
+                      {orders.filter(o => o.status === 'PREPARING').map(order => (
+                        <div key={order.id} className="bg-white p-4 rounded-md shadow-sm border border-[#e9e9e7]">
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="font-black text-lg text-[#37352f]">{order.id.split('-')[0].toUpperCase()}</span>
+                            <span className="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-1 rounded">{order.table}</span>
+                          </div>
+                          <div className="text-sm text-[#37352f] mb-4 space-y-1">
+                            {order.items?.map((item: any) => (
+                              <div key={item.id} className="flex justify-between">
+                                <span>{item.quantity}x {item.product?.name}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex justify-between items-center pt-3 border-t border-[#e9e9e7]">
+                            <span className="font-black text-lg text-[#37352f]">NT$ {order.totalAmount}</span>
+                            <div className="flex space-x-2">
+                              <button onClick={() => updateOrderStatus(order.id, 'VOIDED')} className="text-red-500 font-bold text-sm px-2 hover:underline">作廢</button>
+                              <button onClick={() => updateOrderStatus(order.id, 'COMPLETED')} className="bg-[#37352f] text-white px-4 py-2 rounded font-bold text-sm hover:bg-[#2f2e2a]">結帳 / 出餐</button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-[#f7f6f3] rounded-lg border border-[#e9e9e7] p-4 flex flex-col h-[70vh]">
+                    <h4 className="font-bold text-[#37352f] mb-4 flex items-center"><CheckCircle size={18} className="mr-2 text-green-600"/> 已結帳 (出餐完畢)</h4>
+                    <div className="flex-1 overflow-auto space-y-4 pr-2">
+                      {orders.filter(o => o.status === 'COMPLETED').map(order => (
+                        <div key={order.id} className="bg-white p-4 rounded-md shadow-sm border border-[#e9e9e7] opacity-60">
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="font-black text-lg text-[#37352f]">{order.id.split('-')[0].toUpperCase()}</span>
+                            <span className="text-xs font-bold bg-green-100 text-green-800 px-2 py-1 rounded">{order.table}</span>
+                          </div>
+                          <div className="flex justify-between items-center pt-2">
+                            <span className="font-bold text-sm">NT$ {order.totalAmount}</span>
+                            <span className="text-xs font-bold text-gray-400">{new Date(order.createdAt).toLocaleTimeString()}</span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
-
-              {/* 歷史訂單列表 */}
-              <section className="bg-white p-6 rounded-lg shadow-sm border border-[#e9e9e7]">
-                <h2 className="text-lg font-bold text-[#37352f] mb-6">即時訂單流 (Order Stream)</h2>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="border-b border-[#e9e9e7] text-xs font-bold text-[#9a9a97] uppercase tracking-wider bg-gray-50">
-                        <th className="py-4 px-6 rounded-tl-lg">訂單編號 (Order ID)</th>
-                        <th className="py-4 px-6">時間 (Time)</th>
-                        <th className="py-4 px-6">狀態 (Status)</th>
-                        <th className="py-4 px-6">總金額 (Total)</th>
-                        <th className="py-4 px-6 rounded-tr-lg">訂單明細 (Items)</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-50">
-                      {orders.length === 0 ? (
-                        <tr><td colSpan={5} className="py-12 text-center text-gray-400 font-medium">目前尚無資料</td></tr>
-                      ) : orders.map(o => (
-                        <tr key={o.id} className="hover:bg-gray-50 transition">
-                          <td className="py-4 px-6 font-mono text-sm font-bold text-gray-700">#{o.id.split('-')[0].toUpperCase()}</td>
-                          <td className="py-4 px-6 text-sm text-[#9a9a97] font-medium">{new Date(o.createdAt).toLocaleString()}</td>
-                          <td className="py-4 px-6">
-                            <span className={`px-3 py-1 rounded-full font-bold text-xs ${o.status === 'COMPLETED' ? 'bg-green-100 text-green-700 border border-green-200' : o.status === 'PREPARING' ? 'bg-[#e9e9e7] text-blue-700 border border-[#e9e9e7]' : 'bg-orange-100 text-orange-700 border border-orange-200'}`}>
-                              {o.status === 'COMPLETED' ? '已完成' : o.status === 'PREPARING' ? '準備中' : '等待接單'}
-                            </span>
-                          </td>
-                          <td className="py-4 px-6 font-black text-[#37352f]">NT$ {o.totalAmount}</td>
-                          <td className="py-4 px-6 text-xs text-[#9a9a97] font-medium leading-relaxed">
-                            {o.items?.map((i: any) => `${i.product?.name || '未知商品'} x${i.quantity}`).join(', ')}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-            </div>
-          )}
-          
-          {activeTab === 'qrcodes' && (
+            )}
+            {activeTab === 'qrcodes' && (
             <div className="space-y-6 animate-in fade-in duration-300 max-w-5xl mx-auto print:max-w-none print:m-0 print:p-0">
               <div className="mb-6 flex justify-between items-end print:hidden">
                 <div>
