@@ -2,7 +2,7 @@
   "name": "@odinoder/backend",
   "version": "1.0.0",
   "scripts": {
-    "build": "nest build",
+    "build": "npx prisma generate && nest build",
     "start": "nest start",
     "start:dev": "nest start --watch"
   },
