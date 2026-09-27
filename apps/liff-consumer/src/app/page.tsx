@@ -19,7 +19,7 @@ function OrderingContent() {
   const tableNumber = searchParams.get('table') || '未指定桌號';
 
   if (!tenantId) {
-    return <div className="p-8 text-center mt-20"><h1 className="text-2xl font-bold mb-4">歡迎使用線上點餐系統</h1><p>請掃描店家專屬 QR Code 開始點餐</p></div>;
+    return <div className="p-8 text-center mt-20"><h1 className="text-2xl font-bold mb-4">歡迎光臨</h1><p>請掃描桌面 QR Code 進行點餐</p></div>;
   }
   
   const [products, setProducts] = useState<any[]>([]);

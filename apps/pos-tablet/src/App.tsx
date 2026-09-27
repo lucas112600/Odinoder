@@ -188,7 +188,7 @@ export default function App() {
       <div className="flex h-screen items-center justify-center bg-slate-900 font-sans text-slate-800">
         <div className="bg-white p-10 rounded-xl shadow-2xl w-full max-w-md mx-4">
           <div className="flex flex-col items-center mb-8">
-            <img src="/logo.png" alt="Odinoder Logo" className="w-20 h-20 mb-4 rounded-xl shadow-md" />
+            <img src="/logo.png" alt="System Logo" className="w-20 h-20 mb-4 rounded-xl shadow-md" />
             <h1 className="text-2xl font-bold text-slate-900">KDS 前台設備綁定</h1>
             <p className="text-sm text-slate-500 mt-2">請選擇此設備要連線的實體門市</p>
           </div>
@@ -218,7 +218,7 @@ export default function App() {
       {printOrder && (
         <div className="hidden print:block absolute top-0 left-0 w-[80mm] bg-white text-black p-4 font-mono z-[9999]" id="receipt-container">
           <div className="text-center mb-4">
-            <h1 className="text-xl font-black mb-1">{tenantName || 'Odinoder 門市'}</h1>
+            <h1 className="text-xl font-black mb-1">{tenantName || 'POS 門市'}</h1>
             <p className="text-sm font-bold">結帳明細單</p>
           </div>
           
@@ -244,7 +244,7 @@ export default function App() {
 
           <div className="text-center text-[10px] text-gray-600">
             <p>謝謝您的光臨，請憑此單取餐！</p>
-            <p className="mt-1">由 Odinoder POS 系統列印</p>
+            <p className="mt-1">由 POS 系統列印</p>
           </div>
         </div>
       )}
@@ -288,7 +288,7 @@ export default function App() {
       {/* 左側 Sidebar (深色系商用風格) */}
       <div className="w-20 bg-slate-900 text-slate-300 flex flex-col items-center py-4 shadow-lg z-10 justify-between">
         <div className="flex flex-col items-center space-y-6 w-full">
-          <img src="/logo.png" alt="Odinoder Logo" className="w-12 h-12 mb-4 rounded-md shadow-sm" />
+          <img src="/logo.png" alt="System Logo" className="w-12 h-12 mb-4 rounded-md shadow-sm" />
           <button className="flex flex-col items-center text-white border-l-4 border-blue-500 py-3 w-full bg-slate-800">
             <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
             <span className="text-[10px] font-bold tracking-wider">接單看板</span>

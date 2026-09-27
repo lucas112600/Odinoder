@@ -194,7 +194,7 @@ export default function App() {
       <div className="min-h-screen bg-[#F4F7FE] flex items-center justify-center p-4 font-sans text-gray-800">
         <div className="bg-white rounded-3xl shadow-xl w-full max-w-4xl flex overflow-hidden min-h-[500px]">
           <div className="w-1/2 bg-blue-600 text-white p-12 flex flex-col justify-center">
-            <h1 className="text-4xl font-black mb-4">Odinoder 總營運管理</h1>
+            <h1 className="text-4xl font-black mb-4">營運總部 總營運管理</h1>
             <p className="text-blue-100 leading-relaxed font-medium">歡迎回到雲端 SaaS 門市管理系統。請在右側選擇您要管理的門市，或是建立全新的餐飲品牌據點。</p>
           </div>
           <div className="w-1/2 p-12 flex flex-col h-[500px] overflow-auto">
@@ -264,7 +264,7 @@ export default function App() {
       <aside className="w-64 bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] flex flex-col z-20 print:hidden">
         <div className="h-20 flex items-center px-8 border-b border-gray-100">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black text-lg mr-3 shadow-md shadow-blue-200">O</div>
-          <h1 className="text-xl font-black text-gray-900 tracking-tight">Odinoder</h1>
+          <h1 className="text-xl font-black text-gray-900 tracking-tight">營運總部</h1>
         </div>
         
         <div className="flex-1 py-6 px-4 space-y-2">
@@ -312,7 +312,7 @@ export default function App() {
           <div className="bg-gray-50 rounded-xl p-4 flex items-center space-x-3 border border-gray-100">
             <img src="https://ui-avatars.com/api/?name=Admin&background=1e3a8a&color=fff" alt="avatar" className="w-10 h-10 rounded-full shadow-sm" />
             <div>
-              <p className="text-sm font-bold text-gray-800">店長 (Admin)</p>
+              <p className="text-sm font-bold text-gray-800">系統管理員</p>
               <p className="text-xs text-gray-500 font-medium">{tenantName || '未命名門市'}</p>
               <button onClick={handleLogout} className="text-xs text-blue-600 hover:text-blue-800 font-bold mt-1 underline">切換門市</button>
             </div>
