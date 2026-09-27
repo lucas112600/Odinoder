@@ -342,20 +342,7 @@ export default function App() {
     }
   };
 
-  const totalRevenue = orders.reduce((sum, o) => sum + Number(o.totalAmount || 0), 0);
-  const completedOrders = orders.filter(o => o.status === 'COMPLETED').length;
-
-  // 根據真實資料動態產生圖表 (按日期分組)
-  const generateChartData = () => {
-    const grouped: Record<string, number> = {};
-    orders.forEach(o => {
-      const date = new Date(o.createdAt).toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' });
-      grouped[date] = (grouped[date] || 0) + Number(o.totalAmount || 0);
-    });
-    const data = Object.keys(grouped).map(date => ({ name: date, sales: grouped[date] }));
-    return data.length > 0 ? data : [{ name: '今日', sales: 0 }];
-  };
-  const chartData = generateChartData();
+  
 
   return (
     <div className="flex h-screen bg-[#F4F7FE] font-sans text-[#37352f] overflow-hidden">
