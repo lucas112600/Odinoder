@@ -19,10 +19,11 @@ function OrderingContent() {
   const tableNumber = searchParams.get('table') || '未指定桌號';
 
   if (!tenantId) {
-    return <div className="p-8 text-center mt-20"><h1 className="text-2xl font-bold mb-4">歡迎使用 Odinoder</h1><p>請掃描店家專屬 QR Code 開始點餐</p></div>;
+    return <div className="p-8 text-center mt-20"><h1 className="text-2xl font-bold mb-4">歡迎使用線上點餐系統</h1><p>請掃描店家專屬 QR Code 開始點餐</p></div>;
   }
   
   const [products, setProducts] = useState<any[]>([]);
+  const [tenantName, setTenantName] = useState<string>('');
   const [activeCategory, setActiveCategory] = useState<string>('全部');
   const [cart, setCart] = useState<CartItem[]>([]);
   
@@ -37,6 +38,11 @@ function OrderingContent() {
   const [customQty, setCustomQty] = useState(1);
 
   useEffect(() => {
+    fetch(`${API_BASE}/tenants/${tenantId}`)
+      .then(res => res.json())
+      .then(data => setTenantName(data.name || ''))
+      .catch(e => console.error(e));
+
     fetch(`${API_BASE}/products/tenant/${tenantId}`)
       .then(res => res.json())
       .then(data => setProducts(data))
@@ -128,7 +134,7 @@ function OrderingContent() {
     <main className="min-h-screen bg-gray-50 pb-32 font-sans text-gray-800 flex flex-col relative">
       <header className="bg-white shadow-sm sticky top-0 z-10 px-5 py-4 flex justify-between items-center">
         <div>
-          <h1 className="text-xl font-black text-gray-800">Odinoder 點餐系統</h1>
+          <h1 className="text-xl font-black text-gray-800">{tenantName ? `${tenantName} 點餐系統` : '線上點餐系統'}</h1>
           <div className="flex items-center space-x-2 mt-1">
             <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-bold flex items-center">
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>營業中
