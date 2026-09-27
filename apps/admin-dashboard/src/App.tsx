@@ -9,6 +9,7 @@ import React, { useState, useEffect, useRef } from 'react';
 export default function App() {
   const [tenantId, setTenantId] = useState<string | null>(localStorage.getItem('admin_tenantId'));
   const [tenantName, setTenantName] = useState<string | null>(localStorage.getItem('admin_tenantName'));
+  const [shiftData, setShiftData] = useState<any>({ total: 0, orderCount: 0 });
   const [availableStores, setAvailableStores] = useState<any[]>([]);
   const [newStoreName, setNewStoreName] = useState('');
 
@@ -111,6 +112,22 @@ export default function App() {
       await fetch(`${API_BASE}/raw-materials/${id}`, { method: 'DELETE' });
       fetchRawMaterials();
     } catch(e){}
+  };
+
+  
+  const handleCloseShift = async () => {
+    if (!window.confirm('確定要執行交班結算嗎？這會結算當前的營收並開啟新的班表，此操作無法復原。')) return;
+    try {
+      const res = await fetch(`${API_BASE}/tenants/${tenantId}/close-shift`, { method: 'POST' });
+      if (res.ok) {
+        alert('結班成功！已封存當前營收，系統重新開始計算下一班的帳務。');
+        // Refresh shift data
+        const shiftRes = await fetch(`${API_BASE}/tenants/${tenantId}/active-shift`);
+        setShiftData(await shiftRes.json());
+      }
+    } catch(e) {
+      alert('結班失敗');
+    }
   };
 
   const handleUpdateStoreProfile = async (e: React.FormEvent) => {
@@ -218,6 +235,11 @@ export default function App() {
     if (!tenantId) return;
     const fetchTenantDetails = async () => {
       try {
+          const shiftRes = await fetch(`${API_BASE}/tenants/${tenantId}/active-shift`);
+          if (shiftRes.ok) {
+            setShiftData(await shiftRes.json());
+          }
+
         const res = await fetch(`${API_BASE}/tenants/${tenantId}`);
         const data = await res.json();
         if (data.presetTags) { setPresetTags(data.presetTags.join(',')); }
@@ -930,6 +952,30 @@ export default function App() {
                   </div>
                 </form>
               </div>
+
+                <div className="bg-white p-8 rounded-lg shadow-sm border border-[#e9e9e7] mt-8">
+                  <h4 className="text-lg font-bold text-[#37352f] mb-4 flex items-center">
+                    <Clock size={20} className="mr-3 text-[#37352f]" /> 
+                    每日結單與交接班 (Z-Report)
+                  </h4>
+                  <div className="bg-[#f7f6f3] border border-[#e9e9e7] rounded-md p-6 max-w-md">
+                    <div className="flex justify-between items-center py-2 border-b border-[#e9e9e7]">
+                      <span className="text-[#9a9a97] font-bold text-sm">當前班表未結帳單數</span>
+                      <span className="font-black text-[#37352f]">{shiftData.orderCount} 筆</span>
+                    </div>
+                    <div className="flex justify-between items-center py-4">
+                      <span className="text-[#9a9a97] font-bold text-sm">當前班表營業總額</span>
+                      <span className="font-black text-2xl text-[#37352f]">NT$ {shiftData.total}</span>
+                    </div>
+                    <button 
+                      onClick={handleCloseShift} 
+                      className="w-full bg-[#37352f] text-white px-6 py-3 rounded-md font-bold shadow-md hover:bg-black active:scale-95 transition mt-2">
+                      執行交班與結算
+                    </button>
+                    <p className="text-xs text-gray-400 mt-3 text-center">結班後將把當前營業額封存歸零，並自動開始下一班的帳務計算。</p>
+                  </div>
+                </div>
+
             </div>
           )}
         </div>
