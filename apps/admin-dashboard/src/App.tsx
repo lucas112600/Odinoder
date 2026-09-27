@@ -1,4 +1,4 @@
-import { Package, AlertCircle, Building2, LayoutDashboard, ShoppingBag, Settings, QrCode, ClipboardList, LogOut, Link as LinkIcon } from 'lucide-react';
+import { Package, AlertCircle, Building2 } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'https://odinoder-api.onrender.com';
 import React, { useState, useEffect, useRef } from 'react';
